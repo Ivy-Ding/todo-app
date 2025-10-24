@@ -1,0 +1,30 @@
+section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border: black solid 1px
+}
+
+ul {
+    list-style-type: none;
+}
+
+.page {
+    display: flex;
+}
+
+.header {
+    display: flex;
+    padding: 8px;
+    background-color: lightblue;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div.body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    color: red;
+}

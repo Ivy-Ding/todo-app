@@ -12,6 +12,74 @@
 </head>
 
 <body>
+    <h1>Todo App</h1>
+    <nav>
+        <button>Tasks</button>
+        <button>Archive</button>
+        <button>Settings</button>
+    </nav>
+
+    <div id="tasks-page" class="page">
+        <section id="tasks-pane">
+            <div class="header">
+                <h2>Tasks</h2>
+                <div class="right">
+                    <button>Filter</button>
+                    <button>Sort</button>
+                </div>
+            </div>
+            <div class="body">
+                <ul id="task-list">
+                    <li>
+                        <input type="checkbox" id="task1" name="task1" value="task1">
+                        <label for="task1">task 1</label>
+                        <button>Edit</button>
+                    </li>
+                </ul>
+                <div id="new-task-section">
+                    <input type="text" id="new-task" name="new-task" placeholder="Quick Task Add...">
+                    <button>Add</button>
+                </div>
+            </div>
+        </section>
+
+        <section id=“task-details-pane”>
+            <div class="header">
+                <h2>Task Details</h2>
+            </div>
+            <form id="task-details-form">
+                <input aria-label=“title” type="text" id="title" name="title" value="Existing Title"><br>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="school">School</option>
+                    <option value="personal">Personal</option>
+                </select> <br>
+
+                <label for="due-date">Due Date: </label> <br>
+                <input type="date" id="due-date" name="due-date"><br>
+
+                <label for="priority">Priority: </label><br>
+                <span>Todo: Not sure if radio or buttons...</span><br>
+
+                <label for="notes">Notes</label><br>
+                <textarea id="notes" name="notes"></textarea>
+
+                <p>Subtasks</p>
+                <ul id="subtask-list">
+                    <li>
+                        <input type="checkbox" id="sub1" name="sub1" value="sub1">
+                        <label for="sub1">Subtask 1</label><br>
+                    </li>
+                    <li>
+                        <input type="text" id="new-subtask" name="new-subtask">
+                        <button>Add</button>
+                    </li>
+                </ul>
+
+            </form>
+        </section>
+    </div>
 </body>
 
 </html>
