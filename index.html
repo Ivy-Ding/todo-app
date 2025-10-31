@@ -31,7 +31,7 @@
 				<div class="header">
 					<h2>Tasks</h2>
 					<div class="right">
-						<button aria-label="filter">Filter</button>
+						<button id="filter-button" aria-label="filter">Filter</button>
 						<select id="filter-select" style="display: none;">
 							<option value="">-- No Due Date Filter --</option>
 							<option value="3days">Due within 3 days</option>
@@ -44,7 +44,8 @@
 							<option value="Personal">Projects</option>
 							<option value="Errands">Tests and Exams</option>
 						</select>
-						<button aria-label="sort">Sort</button>
+						
+						<button id="sort-button" aria-label="sort">Sort</button>
 						<select id="sort-select" style="display: none;">
 							<option value="">-- No Sort --</option>
 							<optgroup label="Priority">
@@ -75,7 +76,7 @@
 				</div>
 			</section>
 
-			<section id="“task-details-pane”" class="pane">
+			<section id="task-details-pane" class="pane">
 				<div class="header">
 					<h2>Task Details</h2>
 				</div>

@@ -39,6 +39,11 @@ const taskDetailForm = document.getElementById('task-details-form');
 const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
 
+// event listeners for Filter and Sort buttons
+document.getElementById('filter-button').addEventListener('click', handleFilterOnClick);
+document.getElementById('sort-button').addEventListener('click', handleSortOnClick);
+
+
 let currentFilter = {};
 let currentSort = {};
 
@@ -228,35 +233,46 @@ function handleFilterOnClick() {
 	const filterSelect = document.getElementById('filter-select');
 	const categorySelect = document.getElementById('category-select');
 
-	filterSelect.style.display = filterSelect.style.display === 'none' ? 'inline' : 'none';
-	categorySelect.style.display = categorySelect.style.display === 'none' ? 'inline' : 'none';
+	const isHidden = filterSelect.style.display === 'none';
+	filterSelect.style.display = isHidden ? 'inline' : 'none';
+	categorySelect.style.display = isHidden ? 'inline' : 'none';
 
-	const dueWithin = filterSelect.value;
-	const category = categorySelect.value;
+	if (!isHidden) 
+		return;
 
-	currentFilter = {};
-	if (dueWithin) 
-		currentFilter.dueWithin = dueWithin;
-	if (category) 
-		currentFilter.category = category;
+	// When user changes selection, apply filter
+	filterSelect.onchange = categorySelect.onchange=()=>{
+		const dueWithin = filterSelect.value;
+		const category = categorySelect.value;
 
-	refreshTaskListPane(currentFilter, currentSort);
+		currentFilter = {};
+		if (dueWithin) currentFilter.dueWithin = dueWithin;
+		if (category) currentFilter.category = category;
+
+		refreshTaskListPane(currentFilter, currentSort);
+	};
 }
 
 //show the sort dropdown then sort tasks and refresh task list pane
 function handleSortOnClick() {
 	const sortSelect = document.getElementById('sort-select');
-	sortSelect.style.display = sortSelect.style.display === 'none' ? 'inline' : 'none';
+	const isHidden = sortSelect.style.display === 'none';
+	sortSelect.style.display = isHidden ? 'inline' : 'none';
 
-	if (!sortSelect.value) {
-		currentSort = null;
-	} 
-	
-	else {
-		const [by, dir] = sortSelect.value.split('-');
-		currentSort = { by, dir };
-	}
+	if(!isHidden) 
+		return;
 
-	refreshTaskListPane(currentFilter, currentSort);
+	sortSelect.onchange = () => {
+		const value = sortSelect.value;
+		if (!value) {
+			currentSort = null;
+		} 
+		else {
+			const [by, dir] = value.split('-');
+			currentSort = {by, dir};
+		}
+
+		refreshTaskListPane(currentFilter, currentSort);
+	};
 }
 
