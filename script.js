@@ -240,7 +240,6 @@ function handleFilterOnClick() {
 	if (!isHidden) 
 		return;
 
-	// When user changes selection, apply filter
 	filterSelect.onchange = categorySelect.onchange=()=>{
 		const dueWithin = filterSelect.value;
 		const category = categorySelect.value;
