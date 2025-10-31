@@ -39,6 +39,10 @@ const taskDetailForm = document.getElementById('task-details-form');
 const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
 
+let currentFilter = {};
+let currentSort = {};
+
+
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
@@ -118,17 +122,65 @@ function renderTaskListToUL(listToRender) {
 function refreshTaskListPane(filter = null, sort = null) {
 	console.debug('Refreshing task list pane...');
 
-	let htmlToDisplay = renderTaskListToUL(taskList.filter(isActive));
+	let tasksToShow = taskList.filter(isActive);
+	const now = new Date();
 
 	//todo: add support logic for filter & sort, as the above simply shows all incomplete tasks
 	if (filter) {
+
+		if (filter.dueWithin) {
+			let days = 0;
+			if (filter.dueWithin === '3days') 
+				days = 3;
+			else if (filter.dueWithin === '1week') 
+				days = 7;
+			else if (filter.dueWithin === '1month') 
+				days = 30;
+
+			const cutoff = new Date(now);
+			cutoff.setDate(now.getDate() + days);
+
+			tasksToShow = tasksToShow.filter((task) => {
+				if (!task.dueDate) 
+					return false;
+				const due = new Date(t.dueDate);
+				return due >= now && due <= cutoff;
+			});
+		}
+
+		if (filter.category) {
+			tasksToShow = tasksToShow.filter(
+				(task) => task.category === filter.category
+			);
+		}
+
 	}
 
 	if (sort) {
-	}
+		const { by = null, dir = 'asc' } = sort;
 
+		if (by === 'priority') {
+			tasksToShow.sort((a, b) => a.priority - b.priority);
+		} 
+		
+		else if (by === 'dueDate') {
+			tasksToShow.sort((a, b) => {
+				if (!a.dueDate) 
+					return 1;
+				if (!b.dueDate) 
+					return -1;
+				
+				return new Date(a.dueDate) - new Date(b.dueDate);
+			});
+		} 
+
+		if (dir === 'desc') tasksToShow.reverse();
+	}
+	
+	let htmlToDisplay = renderTaskListToUL(taskList.filter(isActive));
 	taskListContainer.replaceChildren(htmlToDisplay);
 }
+
 
 //TASK LIST PAGE event handler methods------------------------------------------------
 
@@ -172,7 +224,39 @@ function handleDeleteTaskOnClick(task) {
 }
 
 //show the filter dropdown then filter tasks and refresh task list pane
-function handleFilterOnClick() {}
+function handleFilterOnClick() {
+	const filterSelect = document.getElementById('filter-select');
+	const categorySelect = document.getElementById('category-select');
+
+	filterSelect.style.display = filterSelect.style.display === 'none' ? 'inline' : 'none';
+	categorySelect.style.display = categorySelect.style.display === 'none' ? 'inline' : 'none';
+
+	const dueWithin = filterSelect.value;
+	const category = categorySelect.value;
+
+	currentFilter = {};
+	if (dueWithin) 
+		currentFilter.dueWithin = dueWithin;
+	if (category) 
+		currentFilter.category = category;
+
+	refreshTaskListPane(currentFilter, currentSort);
+}
 
 //show the sort dropdown then sort tasks and refresh task list pane
-function handleSortOnClick() {}
+function handleSortOnClick() {
+	const sortSelect = document.getElementById('sort-select');
+	sortSelect.style.display = sortSelect.style.display === 'none' ? 'inline' : 'none';
+
+	if (!sortSelect.value) {
+		currentSort = null;
+	} 
+	
+	else {
+		const [by, dir] = sortSelect.value.split('-');
+		currentSort = { by, dir };
+	}
+
+	refreshTaskListPane(currentFilter, currentSort);
+}
+

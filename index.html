@@ -32,7 +32,30 @@
 					<h2>Tasks</h2>
 					<div class="right">
 						<button aria-label="filter">Filter</button>
+						<select id="filter-select" style="display: none;">
+							<option value="">-- No Due Date Filter --</option>
+							<option value="3days">Due within 3 days</option>
+							<option value="1week">Due within 1 week</option>
+							<option value="1month">Due within 1 month</option>
+						</select>
+						<select id="category-select" style="display: none;">
+							<option value="">-- All Categories --</option>
+							<option value="Work">Assignments</option>
+							<option value="Personal">Projects</option>
+							<option value="Errands">Tests and Exams</option>
+						</select>
 						<button aria-label="sort">Sort</button>
+						<select id="sort-select" style="display: none;">
+							<option value="">-- No Sort --</option>
+							<optgroup label="Priority">
+								<option value="priority-asc">Low to High</option>
+								<option value="priority-desc">High to Low</option>
+							</optgroup>
+							<optgroup label="Due Date">
+								<option value="dueDate-asc">Most recent last</option>
+								<option value="dueDate-desc">Most recent first</option>
+							</optgroup>
+						</select>
 					</div>
 				</div>
 				<div class="body">
@@ -137,7 +160,7 @@
 					<button aria-label="delete-task" id="delete-task">
 						Delete
 					</button>
-					<div>
+					<div >
 						<button aria-label="close-details" id="close-details">
 							Close
 						</button>
@@ -154,3 +177,4 @@
 		</div>
 	</body>
 </html>
+
