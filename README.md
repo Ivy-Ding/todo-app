@@ -1,0 +1,1 @@
+I made a function called refreshStatusPane() and for those who are implementing add, delete and complete, refreshStatusPane() and refreshTaskListPane(currentFilter, currentSort) should be called in the onclick functions for these actions
