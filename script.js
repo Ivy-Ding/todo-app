@@ -186,6 +186,11 @@ function refreshTaskListPane(filter = null, sort = null) {
 	taskListContainer.replaceChildren(htmlToDisplay);
 }
 
+//those who are implementing add, delete and complete should call in the onclick functions for these actions
+function refreshStatusPane() {
+	console.debug('Refreshing status pane...');
+
+}
 
 //TASK LIST PAGE event handler methods------------------------------------------------
 
