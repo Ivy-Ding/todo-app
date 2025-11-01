@@ -1,0 +1,49 @@
+section {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	border: black solid 1px;
+}
+
+ol,
+ul {
+	list-style-type: none;
+}
+
+.page {
+	display: flex;
+}
+
+.header {
+	display: flex;
+	padding: 8px;
+	background-color: lightblue;
+	align-items: center;
+	justify-content: space-between;
+}
+
+div.body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+form#task-details-form {
+	display: flex;
+	flex-direction: column;
+	padding: 4px 10px;
+	gap: 10px;
+}
+
+fieldset {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+.button-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}

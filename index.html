@@ -1,17 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<!-- link to external css style sheet -->
+		<link rel="stylesheet" href="style.css" />
+		<!--  link to external javascript -->
+		<script src="script.js" defer></script>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- link to external css style sheet -->
-    <link rel="stylesheet" href="style.css">
-    <!--  link to external javascript -->
-    <script src="script.js" defer></script>
-</head>
+	<!-- NAMING LOGIC:
+ - X-page: top-level container for an entire page, X is one of task, archive, settings
+    - has class "page"
+    - these would probably be its own html file in actual projects
+ - X-pane: a pane within a page, e.g. task page has possible panes task-list, task-details, reward, status
+    - of type "section"
+-->
 
-<body>
-</body>
+	<body>
+		<h1>Todo App</h1>
+		<nav>
+			<button id="tasks-button">Tasks</button>
+			<button id="archive-button">Archive</button>
+			<button id="settings-button">Settings</button>
+		</nav>
 
+		<div id="tasks-page" class="page">
+			<section id="tasks-list-pane" class="pane">
+				<div class="header">
+					<h2>Tasks</h2>
+					<div class="right">
+						<button aria-label="filter">Filter</button>
+						<button aria-label="sort">Sort</button>
+					</div>
+				</div>
+				<div class="body">
+					<div id="task-list-container"></div>
+					<form id="new-task-form">
+						<input
+							aria-label="new-task-input"
+							type="text"
+							name="title"
+							placeholder="Quick Task Add..."
+							required
+							oninvalid="this.setCustomValidity('Task title cannot be empty')"
+							oninput="this.setCustomValidity('')"
+						/>
+						<button type="submit">Add</button>
+					</form>
+				</div>
+			</section>
+
+			<section id="“task-details-pane”" class="pane">
+				<div class="header">
+					<h2>Task Details</h2>
+				</div>
+				<form id="task-details-form">
+					<input
+						aria-label="“title”"
+						type="text"
+						id="title"
+						name="title"
+						placeholder="Title Here"
+						required
+						required
+						oninvalid="this.setCustomValidity('Task title cannot be empty')"
+						oninput="this.setCustomValidity('')"
+					/>
+
+					<label for="category"
+						>Category:
+						<select id="category" name="category">
+							<option value="add-new">+ Add New Category</option>
+						</select>
+					</label>
+
+					<label for="due-date"
+						>Due Date:
+						<input type="date" id="due-date" name="due-date" />
+					</label>
+
+					<fieldset class="form-group">
+						<legend>Priority</legend>
+
+						<label>
+							<input type="radio" name="priority" value="3" />
+							High
+						</label>
+
+						<label>
+							<input type="radio" name="priority" value="2" />
+							Medium
+						</label>
+
+						<label>
+							<input type="radio" name="priority" value="1" />
+							Low
+						</label>
+
+						<label>
+							<input
+								type="radio"
+								name="priority"
+								value="0"
+								checked
+							/>
+							None
+						</label>
+					</fieldset>
+
+					<label for="notes"
+						>Notes<br />
+						<textarea id="notes" name="notes"></textarea>
+					</label>
+
+					<label
+						>Subtasks
+						<ul id="subtask-list">
+							<li>
+								<input type="checkbox" />
+								<span>Sample Subtask 1</span>
+							</li>
+							<li>
+								<input
+									type="text"
+									id="new-subtask-input"
+									name="title"
+								/>
+								<button id="new-subtask-button">Add</button>
+							</li>
+						</ul>
+					</label>
+				</form>
+				<div class="button-row">
+					<button aria-label="delete-task" id="delete-task">
+						Delete
+					</button>
+					<div>
+						<button aria-label="close-details" id="close-details">
+							Close
+						</button>
+						<button
+							aria-label="save-task"
+							id="save-task"
+							type="submit"
+						>
+							Save
+						</button>
+					</div>
+				</div>
+			</section>
+		</div>
+	</body>
 </html>
