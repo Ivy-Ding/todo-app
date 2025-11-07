@@ -190,6 +190,63 @@ function refreshTaskListPane(filter = null, sort = null) {
 function refreshStatusPane() {
 	console.debug('Refreshing status pane...');
 
+	const now = new Date();
+	const threeDaysLater = new Date(now);
+	threeDaysLater.setDate(now.getDate() + 3);
+	const oneWeekLater = new Date(now);
+	oneWeekLater.setDate(now.getDate() + 7);
+	const oneMonthLater = new Date(now);
+	oneMonthLater.setDate(now.getDate() + 30);
+	const ongoingTasks = taskList.filter(isActive);
+	const completedTasks = taskList.filter((task) => task.dateCompleted && !task.dateDeleted);
+
+	const priorityTasks = ongoingTasks.filter((task) => 
+		task.priority === PRIORITIES.high
+	).length;
+
+	const due3Days = ongoingTasks.filter((task) => 
+		task.dueDate && new Date(task.dueDate) <= threeDaysLater
+	).length;
+
+	const due1Week = ongoingTasks.filter((task) => 
+		task.dueDate && new Date(task.dueDate) <= oneWeekLater
+	).length;
+
+	const due1Month = ongoingTasks.filter((task) => 
+		task.dueDate && new Date(task.dueDate) <= oneMonthLater
+	).length;
+
+	const totalTasks = ongoingTasks.length;
+
+	const completedToday = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+		return (
+			completedDate.toDateString() === now.toDateString()
+		);
+	}).length;
+
+	const millisecondsInOneDay = 1000 * 60 * 60 * 24;
+	const completed1Week = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 7;
+	}).length;
+
+	const completed1Month = completedTasks.filter((t) => {
+		const completedDate = new Date(t.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 30;
+	}).length;
+
+	const completedTotal = completedTasks.length;
+
+	document.getElementById('priority-task-count').textContent = priorityTasks;
+	document.getElementById('due-3days-count').textContent = due3Days;
+	document.getElementById('due-1week-count').textContent = due1Week;
+	document.getElementById('due-1month-count').textContent = due1Month;
+	document.getElementById('total-task-count').textContent = totalTasks;
+	document.getElementById('completed-today-count').textContent = completedToday;
+	document.getElementById('completed-1week-count').textContent = completed1Week;
+	document.getElementById('completed-1month-count').textContent = completed1Month;
+	document.getElementById('completed-total-count').textContent = completedTotal;
 }
 
 //TASK LIST PAGE event handler methods------------------------------------------------
