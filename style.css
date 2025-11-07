@@ -132,7 +132,7 @@ nav button::before {
 
 .right button[aria-label="filter"]::before {
     filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg);
-    background-image: url(Logo/filter.svg);
+    background-image: url(Logo/filter.png);
 }
 
 .right button[aria-label="sort"]::before {
