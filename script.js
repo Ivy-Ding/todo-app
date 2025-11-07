@@ -33,11 +33,26 @@ class Task {
 
 //DOM consts & handlers --------------------------------------------
 //PANES FOR TAB SWITCHING
-const tasksPage = document.getElementById('tasks-page')
-const tasksListPane = document.getElementById('tasks-list-pane')
-const taskDetailsPane = document.getElementById('task-details-pane')
-const taskRewardsPane = document.getElementById('task-rewards-pane')
-const taskStatusPane = document.getElementById('task-status-pane')
+const archiveButton = document.getElementById('archive-button');
+const archivePage = document.getElementById('archive-page');
+archiveButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.archive);
+});
+
+const settingsButton = document.getElementById('settings-button');
+const settingsPage = document.getElementById('settings-page');
+settingsButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.settings);
+});
+
+const taskButton = document.getElementById('tasks-button');
+taskButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.home);
+});
+const tasksPage = document.getElementById('tasks-page');
+const tasksListPane = document.getElementById('tasks-list-pane');
+const taskDetailsPane = document.getElementById('task-details-pane');
+const homeSidePane = document.getElementById('home-side-pane');
 
 //TASK LIST PAGE
 const taskListContainer = document.getElementById('task-list-container');
@@ -50,7 +65,7 @@ newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
 closeDetailsButton.addEventListener('click', (e) => {
-	setActivePage(PAGES.home)
+	setActivePage(PAGES.home);
 });
 
 //variables---------------------------------------------
@@ -61,14 +76,14 @@ const PRIORITIES = {
 	high: 3,
 };
 
-let taskList = [new Task("sample task")];
+let taskList = [new Task('sample task')];
 let categoriesList = [];
 
 const PAGES = {
-	home: "home",
-	details: "details",
-	archive: "archive",
-	settings: "settings",
+	home: 'home',
+	details: 'details',
+	archive: 'archive',
+	settings: 'settings',
 };
 
 //helper methods --------------------
@@ -174,7 +189,7 @@ function handleAddNewCategoryOnClick(categoryName) {}
 function handleEditOnClick(task) {
 	console.debug(`handleEditOnClick(${task.title})`);
 	//swap tabs
-	setActivePage(PAGES.details)
+	setActivePage(PAGES.details);
 	//todo: rest of the edit logic here...
 }
 
@@ -196,46 +211,70 @@ function handleSortOnClick() {}
 
 // Tab Switch ---------------------------------------------------------------
 function hideElement(element) {
-	element.style.display = "none"
+	element.style.display = 'none';
 }
 
 function showElement(element) {
-	//note: currently all pages & divs are flex and not blocks, 
+	//note: currently all pages & divs are flex and not blocks,
 	// if future updates change this, this code needs to be updated as well
-	element.style.display = "flex" 
+	element.style.display = 'flex';
 }
 
 //input: a page from const PAGES
 //function: show and hide the corresponding pages and panes
 function setActivePage(newPage) {
-	console.debug(`renderActivePage(${newPage})`)
-	switch(newPage) {
+	console.debug(`renderActivePage(${newPage})`);
+	switch (newPage) {
 		case PAGES.home:
+			//update buttons
+			taskButton.classList.add('active');
+			archiveButton.classList.remove('active');
+			settingsButton.classList.remove('active');
 			//show & hide pages
-			showElement(tasksPage)
-			//todo: hide archive and settings page
+			showElement(tasksPage);
+			hideElement(archivePage);
+			hideElement(settingsPage);
 			//show & hide panes
-			showElement(tasksListPane)
-			showElement(taskRewardsPane)
-			showElement(taskStatusPane)
-			hideElement(taskDetailsPane)
+			showElement(tasksListPane);
+			showElement(homeSidePane);
+			hideElement(taskDetailsPane);
 			break;
 		case PAGES.details:
+			//update buttons
+			taskButton.classList.add('active');
+			archiveButton.classList.remove('active');
+			settingsButton.classList.remove('active');
 			//show & hide pages
-			showElement(tasksPage)
-			//todo: hide archive and settings page
+			showElement(tasksPage);
+			hideElement(archivePage);
+			hideElement(settingsPage);
 			//show & hide panes
-			showElement(taskDetailsPane)
-			showElement(tasksListPane)
-			hideElement(taskRewardsPane)
-			hideElement(taskStatusPane)
+			showElement(tasksListPane);
+			showElement(taskDetailsPane);
+			hideElement(homeSidePane);
 			break;
 		case PAGES.archive:
+			//update buttons
+			archiveButton.classList.add('active');
+			taskButton.classList.remove('active');
+			settingsButton.classList.remove('active');
+			//show & hide pages
+			showElement(archivePage);
+			hideElement(tasksPage);
+			hideElement(settingsPage);
 			break;
 		case PAGES.settings:
+			//update buttons
+			settingsButton.classList.add('active');
+			taskButton.classList.remove('active');
+			archiveButton.classList.remove('active');
+			//show & hide pages
+			showElement(settingsPage);
+			hideElement(archivePage);
+			hideElement(tasksPage);
 			break;
 		default:
-			console.error(`Unknown page encountered: ${newPage}`)
+			console.error(`Unknown page encountered: ${newPage}`);
 	}
 }
 

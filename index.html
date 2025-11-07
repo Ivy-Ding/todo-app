@@ -19,174 +19,225 @@
 -->
 
 	<body>
-		<h1>Todo App</h1>
 		<nav>
-			<button id="tasks-button" class="active">Tasks</button>
-			<button id="archive-button" disabled>Archive</button>
-			<button id="settings-button" disabled>Settings</button>
+			<button id="tasks-button">Tasks</button>
+			<button id="archive-button">Archive</button>
+			<button id="settings-button">Settings</button>
 		</nav>
 
-		<div id="tasks-page" class="page">
-			<section id="tasks-list-pane" class="pane">
-				<div class="header">
-					<h2>Tasks</h2>
-					<div class="right">
-						<button aria-label="filter" disabled>Filter</button>
-						<button aria-label="sort" disabled>Sort</button>
+		<div id="tasks-page" class="page flex-row-container">
+				<section id="tasks-list-pane" class="pane fixed-dock-30 flex-column-container">
+					<div class="header">
+						<h2>Tasks</h2>
+						<div class="right">
+							<button aria-label="filter" disabled>Filter</button>
+							<button aria-label="sort" disabled>Sort</button>
+						</div>
 					</div>
-				</div>
-				<div class="body">
-					<div id="task-list-container"></div>
-					<form id="new-task-form">
-						<input
-							aria-label="new-task-input"
-							type="text"
-							name="title"
-							placeholder="Quick Task Add..."
-							required
-							oninvalid="this.setCustomValidity('Task title cannot be empty')"
-							oninput="this.setCustomValidity('')"
-						/>
-						<button type="submit">Add</button>
-					</form>
-				</div>
-			</section>
+					
+					<div id="task-list-container" class="body"></div>
 
-			<section id="task-details-pane" class="pane">
-				<div class="header">
-					<h2>Task Details</h2>
-				</div>
-				<form id="task-details-form">
-					<label for="title" class="title-label">
-						<span class="title-required">*</span>
-						<input
-							aria-label="title"
-							type="text"
-							id="title"
-							name="title"
-							placeholder="Title Here"
-							required
-							oninvalid="this.setCustomValidity('Task title cannot be empty')"
-							oninput="this.setCustomValidity('')"
-						/>
-					</label>
-
-					<label for="category"
-						>Category:
-						<select id="category" name="category">
-							<option value="add-new">+ Add New Category</option>
-						</select>
-					</label>
-
-					<label for="due-date"
-						>Due Date:
-						<input type="date" id="due-date" name="due-date" />
-					</label>
-
-					<fieldset class="form-group">
-						<legend>Priority</legend>
-
-						<label>
-							<input type="radio" name="priority" value="3" />
-							High
-						</label>
-
-						<label>
-							<input type="radio" name="priority" value="2" />
-							Medium
-						</label>
-
-						<label>
-							<input type="radio" name="priority" value="1" />
-							Low
-						</label>
-
-						<label>
+					<div class="footer">
+						<form id="new-task-form">
 							<input
-								type="radio"
-								name="priority"
-								value="0"
-								checked
+								aria-label="new-task-input"
+								type="text"
+								name="title"
+								placeholder="Quick Task Add..."
+								required
+								oninvalid="this.setCustomValidity('Task title cannot be empty')"
+								oninput="this.setCustomValidity('')"
 							/>
-							None
+							<button type="submit">Add</button>
+						</form>
+					</div>
+				</section>
+
+				<section id="task-details-pane" class="pane flex-column-container">
+					<div class="header">
+						<h2>Task Details</h2>
+					</div>
+					<form id="task-details-form">
+						<label for="title" class="title-label">
+							<span class="title-required">*</span>
+							<input
+								aria-label="title"
+								type="text"
+								id="title"
+								name="title"
+								placeholder="Title Here"
+								required
+								oninvalid="this.setCustomValidity('Task title cannot be empty')"
+								oninput="this.setCustomValidity('')"
+							/>
 						</label>
-					</fieldset>
 
-					<label for="notes"
-						>Notes<br />
-						<textarea id="notes" name="notes"></textarea>
-					</label>
+						<label for="category"
+							>Category:
+							<select id="category" name="category">
+								<option value="add-new">+ Add New Category</option>
+							</select>
+						</label>
 
-					<label for="subtasks"
-						>Subtasks
-						<ul id="subtask-list">
-							<li>
-								<input type="checkbox" />
-								<span>Sample Subtask 1</span>
-							</li>
-							<li>
+						<label for="due-date"
+							>Due Date:
+							<input type="date" id="due-date" name="due-date" />
+						</label>
+
+						<fieldset class="form-group">
+							<legend>Priority</legend>
+
+							<label>
+								<input type="radio" name="priority" value="3" />
+								High
+							</label>
+
+							<label>
+								<input type="radio" name="priority" value="2" />
+								Medium
+							</label>
+
+							<label>
+								<input type="radio" name="priority" value="1" />
+								Low
+							</label>
+
+							<label>
 								<input
-									type="text"
-									id="new-subtask-input"
-									name="title"
+									type="radio"
+									name="priority"
+									value="0"
+									checked
 								/>
-								<button id="new-subtask-button" disabled>Add</button>
-							</li>
-						</ul>
-					</label>
-				</form>
-				<div class="button-row">
-					<button aria-label="delete-task" id="delete-task" disabled>
-						Delete
-					</button>
-					<div>
-						<button aria-label="close-details" id="close-details">
-							Close
+								None
+							</label>
+						</fieldset>
+
+						<label for="notes"
+							>Notes<br />
+							<textarea id="notes" name="notes"></textarea>
+						</label>
+
+						<label for="subtasks"
+							>Subtasks
+							<ul id="subtask-list">
+								<li>
+									<input type="checkbox" />
+									<span>Sample Subtask 1</span>
+								</li>
+								<li>
+									<input
+										type="text"
+										id="new-subtask-input"
+										name="title"
+									/>
+									<button id="new-subtask-button" disabled>Add</button>
+								</li>
+							</ul>
+						</label>
+					</form>
+					<div class="button-row footer">
+						<button aria-label="delete-task" id="delete-task" disabled>
+							Delete
 						</button>
-						<button
-							aria-label="save-task"
-							id="save-task"
-							type="submit"
+						<div>
+							<button aria-label="close-details" id="close-details">
+								Close
+							</button>
+							<button
+								aria-label="save-task"
+								id="save-task"
+								type="submit"
+								disabled
+							>
+								Save
+							</button>
+						</div>
+					</div>
+				</section>
+
+				<div id = "home-side-pane" class="flex-column-container">
+					<section id="task-rewards-pane" class="pane">
+						<div class="header">
+							<h2>Rewards</h2>
+						</div>
+						<img class="placeholder" src="assets/reward-placeholder.png" 
+						alt = "a plant in the center and waterdrop shaped progress indicator on the top left">
+					</section>
+
+					<section id="task-status-pane" class="pane">
+						<div class="header">
+							<h2>My Status</h2>
+						</div>
+						<div class="body flex-row-container">
+							<div>						
+								<h3>Ongoing</h3>
+								<ul id="status-ongoing">
+									<li>Priority Task: <span id="priority-task-count">0</span></li>
+									<li>Task Due in 3 Days: <span id="due-3days-count">0</span></li>
+									<li>Task Due in 1 Week: <span id="due-1week-count">0</span></li>
+									<li>Task Due in 1 Month: <span id="due-1month-count">0</span></li>
+									<li>Total Task: <span id="total-task-count">0</span></li>
+								</ul>
+							</div>
+
+							<div>
+								<h3>Completed</h3>
+								<ul id="status-completed">
+									<li>Completed Today: <span id="completed-today-count">0</span></li>
+									<li>Completed 1 Week: <span id="completed-1week-count">0</span></li>
+									<li>Completed 1 Month: <span id="completed-1month-count">0</span></li>
+									<li>Till Date: <span id="completed-total-count">0</span></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+			</div>
+		</div>
+
+		<div id ="archive-page" class="page flex-column-container">	
+					<img class="placeholder" src="assets/archive-placeholder.png">
+		</div>
+
+		<div id ="settings-page" class="page flex-column-container">
+			<div class="flex-row-container">
+				<fieldset id="setting-left-pane" class="pane fixed-dock-20">
+					<label>
+						<input type="radio" disabled />
+						Account
+					</label><br>
+
+					<label>
+						<input type="radio" disabled />
+						Learn
+					</label><br>
+
+					<label>
+						<input type="radio" name="setting" value="appearance" checked/>
+						Appearance
+					</label><br>
+
+					<label>
+						<input
+							type="radio"
 							disabled
-						>
-							Save
-						</button>
-					</div>
+						/>
+						About
+					</label><br>
+
+					<label>
+						<input
+							type="radio"
+							disabled
+						/>
+						Help
+					</label><br>
+				</fieldset>
+
+				<div class="pane">
+					<img class="placeholder" src="assets/setting-placeholder.png">
 				</div>
-			</section>
-
-			<div class="flex-column-container">
-				<section id="task-rewards-pane" class="pane">
-					<div class="header">
-						<h2>Rewards</h2>
-					</div>
-					<img class="placeholder" src="assets/reward-placeholder.png" 
-					alt = "a plant in the center and waterdrop shaped progress indicator on the top left">
-				</section>
-
-				<section id="task-status-pane" class="pane">
-					<div class="header">
-						<h2>My Status</h2>
-					</div>
-					<div class="body">
-						<h3>Ongoing</h3>
-						<ul id="status-ongoing">
-							<li>Priority Task: <span id="priority-task-count">0</span></li>
-							<li>Task Due in 3 Days: <span id="due-3days-count">0</span></li>
-							<li>Task Due in 1 Week: <span id="due-1week-count">0</span></li>
-							<li>Task Due in 1 Month: <span id="due-1month-count">0</span></li>
-							<li>Total Task: <span id="total-task-count">0</span></li>
-						</ul>
-
-						<h3>Completed</h3>
-						<ul id="status-completed">
-							<li>Completed Today: <span id="completed-today-count">0</span></li>
-							<li>Completed 1 Week: <span id="completed-1week-count">0</span></li>
-							<li>Completed 1 Month: <span id="completed-1month-count">0</span></li>
-							<li>Till Date: <span id="completed-total-count">0</span></li>
-						</ul>
-					</div>
-				</section>
+				
 			</div>
 		</div>
 
