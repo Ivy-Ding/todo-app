@@ -78,14 +78,15 @@ nav button::before {
     min-height: 0;
     max-width: 780px;
 }
-
-.page .pane:first-child {
-    flex: 0 0 30%;
+/* todo: changed it for demo so the rewards img isn't all squished, 
+not sure why 30-70 in the first place tho, where did we use it?*/
+.page .pane:first-child { 
+    flex: 0 0 40%;
     border-radius: 0 0 0 5px;
 }
 
 .page .pane:last-child {
-    flex: 0 0 70%;
+    flex: 0 0 60%;
     border-radius: 0 0 5px 0;
 }
 
@@ -570,4 +571,19 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none; /* prevents clicks */
+}
+
+/* quick and dirty CSS to align stuff for demo, might conflict with other stuff */
+.page {
+    flex-direction: row;
+}
+
+.flex-column-container {
+    display: flex;
+    flex-direction: column;
+}
+
+img.placeholder {
+    max-height: 80%;
+    flex: 1 1 auto;
 }
