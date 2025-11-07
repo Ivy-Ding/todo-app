@@ -63,7 +63,7 @@ nav button::before {
     background-image: url(Logo/settings.png);
 }
 
-/* .page {
+.page {
     height: 650px; 
     display: flex;
     margin: 0 auto;
@@ -88,7 +88,6 @@ nav button::before {
     flex: 0 0 60%;
     border-radius: 0 0 5px 0;
 } 
-*/
 
 .page .pane .header {
     display: flex;
