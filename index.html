@@ -22,8 +22,8 @@
 		<h1>Todo App</h1>
 		<nav>
 			<button id="tasks-button" class="active">Tasks</button>
-			<button id="archive-button">Archive</button>
-			<button id="settings-button">Settings</button>
+			<button id="archive-button" disabled>Archive</button>
+			<button id="settings-button" disabled>Settings</button>
 		</nav>
 
 		<div id="tasks-page" class="page">
@@ -31,8 +31,8 @@
 				<div class="header">
 					<h2>Tasks</h2>
 					<div class="right">
-						<button aria-label="filter">Filter</button>
-						<button aria-label="sort">Sort</button>
+						<button aria-label="filter" disabled>Filter</button>
+						<button aria-label="sort" disabled>Sort</button>
 					</div>
 				</div>
 				<div class="body">
@@ -130,23 +130,24 @@
 									id="new-subtask-input"
 									name="title"
 								/>
-								<button id="new-subtask-button">Add</button>
+								<button id="new-subtask-button" disabled>Add</button>
 							</li>
 						</ul>
 					</label>
 				</form>
 				<div class="button-row">
-					<button aria-label="delete-task" id="delete-task">
+					<button aria-label="delete-task" id="delete-task" disabled>
 						Delete
 					</button>
 					<div>
-						<button aria-label="close-details" id="close-details">
+						<button aria-label="close-details" id="close-details" disabled>
 							Close
 						</button>
 						<button
 							aria-label="save-task"
 							id="save-task"
 							type="submit"
+							disabled
 						>
 							Save
 						</button>
