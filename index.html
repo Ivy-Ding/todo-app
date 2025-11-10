@@ -19,7 +19,6 @@
 -->
 
 	<body>
-		<h1>Todo App</h1>
 		<nav>
 			<button id="tasks-button">Tasks</button>
 			<button id="archive-button">Archive</button>
@@ -52,22 +51,24 @@
 				</div>
 			</section>
 
-			<section id="“task-details-pane”" class="pane">
+			<section id="task-details-pane" class="pane">
 				<div class="header">
 					<h2>Task Details</h2>
 				</div>
 				<form id="task-details-form">
-					<input
-						aria-label="“title”"
-						type="text"
-						id="title"
-						name="title"
-						placeholder="Title Here"
-						required
-						required
-						oninvalid="this.setCustomValidity('Task title cannot be empty')"
-						oninput="this.setCustomValidity('')"
-					/>
+					<label for="title" class="title-label">
+						<span class="title-required">*</span>
+						<input
+							aria-label="title"
+							type="text"
+							id="title"
+							name="title"
+							placeholder="Title Here"
+							required
+							oninvalid="this.setCustomValidity('Task title cannot be empty')"
+							oninput="this.setCustomValidity('')"
+						/>
+					</label>
 
 					<label for="category"
 						>Category:
@@ -115,7 +116,7 @@
 						<textarea id="notes" name="notes"></textarea>
 					</label>
 
-					<label
+					<label 
 						>Subtasks
 						<ul id="subtask-list">
 							<li>
@@ -151,6 +152,44 @@
 					</div>
 				</div>
 			</section>
+
+			<div id = "home-side-pane">
+				<section id="task-rewards-pane" class="pane">
+						<div class="header">
+							<h2>Rewards</h2>
+						</div>
+						<span>Water Droplet Progress Bar</span>
+						<span>Plant Image</span>
+				</section>
+
+				<section id="task-status-pane" class="pane">
+					<div class="header">
+						<h2>My Status</h2>
+					</div>
+					<div class="body">
+						<div>						
+							<h3>Ongoing</h3>
+							<ul id="status-ongoing">
+								<li>Priority Task: <span id="priority-task-count">0</span></li>
+								<li>Task Due in 3 Days: <span id="due-3days-count">0</span></li>
+								<li>Task Due in 1 Week: <span id="due-1week-count">0</span></li>
+								<li>Task Due in 1 Month: <span id="due-1month-count">0</span></li>
+								<li>Total Task: <span id="total-task-count">0</span></li>
+							</ul>
+						</div>
+
+						<div>
+							<h3>Completed</h3>
+							<ul id="status-completed">
+								<li>Completed Today: <span id="completed-today-count">0</span></li>
+								<li>Completed 1 Week: <span id="completed-1week-count">0</span></li>
+								<li>Completed 1 Month: <span id="completed-1month-count">0</span></li>
+								<li>Till Date: <span id="completed-total-count">0</span></li>
+							</ul>
+						</div>
+					</div>
+				</section>
+			</div>
 		</div>
 	</body>
 </html>
