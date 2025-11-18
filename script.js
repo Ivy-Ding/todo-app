@@ -38,9 +38,35 @@ const newTaskForm = document.getElementById('new-task-form');
 const taskDetailForm = document.getElementById('task-details-form');
 const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
+const categorySelect = document.getElementById('category');
 
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
+
+//POPUP MODAL
+const popupOverlay = document.getElementById('popup-overlay');
+const popupInput = document.getElementById('popup-input');
+const popupTitle = document.getElementById('popup-title');
+const popupSave = document.getElementById('popup-save');
+const popupClose = document.getElementById('popup-close');
+
+popupSave.addEventListener('click', () => {
+	if (popupSaveCallback) popupSaveCallback(popupInput.value);
+	closePopup();
+});
+
+popupClose.addEventListener('click', closePopup);
+
+categorySelect.addEventListener('click', function () {
+	if (this.value === 'add-new') {
+		openPopup("Add New Category", "", (newCat) => {
+			newCat = newCat.trim();
+			if (newCat !== "") {
+				handleAddNewCategoryOnClick(newCat);
+			} 
+		});
+	}
+});
 
 closeDetailsButton.addEventListener('click', (e) => {
 	//    todo
@@ -56,6 +82,10 @@ const PRIORITIES = {
 
 let taskList = [];
 let categoriesList = [];
+
+let taskBeingEdited = null; //global var to store the task being edited in task details form
+
+let popupSaveCallback = null;//global var to store the callback function for the popup save button
 
 //helper methods --------------------
 
@@ -153,12 +183,70 @@ function handleAddTaskOnClick(e) {
 
 // push category name to categoriesList, then update the category DOM drodown
 // note: new category name cannot be "add-new", if it is then prompt user to rename and do not add to list
-function handleAddNewCategoryOnClick(categoryName) {}
+function handleAddNewCategoryOnClick(categoryName) {
+	categoryName = categoryName.trim();
+
+	// empty name check
+	if (categoryName.length === 0) {
+		alert("Category name cannot be empty.");
+		return;
+	}
+
+	// name cannot be "add-new" check
+	if (categoryName === "add-new" || categoryName === "+ Add New Category") {
+		alert('Please choose a different category name.');
+		return;
+	}
+
+	// prevent duplicates
+	if (categoriesList.includes(categoryName)) {
+		alert("Category already exists.");
+		return;
+	}
+
+	// add to list
+	categoriesList.push(categoryName);
+
+	// update the dropdown UI
+	const categorySelect = document.getElementById('category');
+
+	categorySelect.innerHTML = "";
+
+	const addNewOption = document.createElement('option');
+	addNewOption.value = 'add-new';
+	addNewOption.textContent = '+ Add New Category';
+	categorySelect.appendChild(addNewOption);
+
+	for (const cat of categoriesList) {
+		const opt = document.createElement('option');
+		opt.value = cat;
+		opt.textContent = cat;
+		categorySelect.appendChild(opt);
+	}
+
+	//auto-select newly added category
+	categorySelect.value = categoryName;
+}
 
 // pre-fill the task details form with info from the given task,
 // then set the task details form to show (ignore this for now as we aren't switching panes yet, so task details form is always showing lol)
 function handleEditOnClick(task) {
 	console.debug(`handleEditOnClick(${task.title})`);
+
+	//task being edited
+	taskBeingEdited = task;
+
+	// fill form fields
+	taskDetailForm.elements['title'].value = task.title || '';
+	taskDetailForm.elements['category'].value = task.category || 'add-new';
+	taskDetailForm.elements['due-date'].value = task.dueDate || '';
+	taskDetailForm.elements['notes'].value = task.notes || '';
+
+	// priority radio buttons fill
+	const radios = taskDetailForm.querySelectorAll('input[name="priority"]');
+	radios.forEach(r => {
+		r.checked = Number(r.value) === Number(task.priority);
+	});
 }
 
 // on submit update the task info and refresh the task list pane
@@ -176,3 +264,19 @@ function handleFilterOnClick() {}
 
 //show the sort dropdown then sort tasks and refresh task list pane
 function handleSortOnClick() {}
+
+
+//POPUP MODAL event handler methods------------------------------------------------
+function openPopup(title, defaultValue, onSave) {
+	popupTitle.textContent = title;
+	popupInput.value = defaultValue || "";
+	popupSaveCallback = onSave;
+	popupOverlay.style.display = "flex";
+	popupInput.focus();
+}
+
+function closePopup() {
+	popupOverlay.style.display = "none";
+	popupSaveCallback = null;
+}
+

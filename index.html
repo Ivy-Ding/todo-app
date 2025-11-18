@@ -72,6 +72,7 @@
 					<label for="category"
 						>Category:
 						<select id="category" name="category">
+							<option value="" disabled selected>Select a category...</option>
 							<option value="add-new">+ Add New Category</option>
 						</select>
 					</label>
@@ -151,6 +152,19 @@
 					</div>
 				</div>
 			</section>
+		</div>
+		<!-- Popup Modal -->
+		<div id="popup-overlay" class="popup-overlay">
+			<div class="popup-box">
+				<h3 id="popup-title">Popup</h3>
+
+				<input id="popup-input" type="text" placeholder="Enter name..." />
+
+				<div class="popup-buttons">
+					<button id="popup-close">Close</button>
+					<button id="popup-save">Save</button>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
