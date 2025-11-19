@@ -68,6 +68,30 @@ categorySelect.addEventListener("click", function () {
     }
 });
 
+const newSubtaskInput = document.getElementById("new-subtask-input");
+const newSubtaskButton = document.getElementById("new-subtask-button");
+const subtaskListUI = document.getElementById("subtask-list");
+
+newSubtaskButton.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (!taskBeingEdited) {
+        alert("Select a task to add subtasks to.");
+        return;
+    }
+
+    const title = newSubtaskInput.value.trim();
+    if (title === "") return;
+
+    const sub = new Subtask(title);
+    taskBeingEdited.subtasks.push(sub);
+
+    renderSubtask(sub);
+
+    newSubtaskInput.value = "";
+});
+
+
 
 closeDetailsButton.addEventListener('click', (e) => {
 	//    todo
@@ -118,6 +142,11 @@ function renderTaskToLi(task) {
 			task.dateCompleted = Date.now();
 			li.parentNode.removeChild(li);
 		}
+		// If user was editing this same task then clear detail panel when done as marked
+        if (taskBeingEdited === task) {
+            clearTaskDetailsPanel();
+            taskBeingEdited = null;
+        }
 	});
 
 	const editButton = document.createElement('button');
@@ -230,22 +259,29 @@ function handleEditOnClick(task) {
 	taskDetailForm.elements['due-date'].value = task.dueDate || '';
 	taskDetailForm.elements['notes'].value = task.notes || '';
 
-		// priority radio buttons fill
+	// priority radio buttons fill
 	const radios = taskDetailForm.querySelectorAll('input[name="priority"]');
 
-	// if no priority exists, use default = 0 (None)
+	// if no priority exists use none
 	const priorityValue = task.priority != null ? Number(task.priority) : 0;
 
 	radios.forEach(r => {
 		r.checked = Number(r.value) === priorityValue;
 	});
+
+	
+	subtaskListUI.querySelectorAll("li:not(:last-child)").forEach(li => li.remove());
+
+	// Render existing subtasks
+	task.subtasks.forEach(st => renderSubtask(st));
+
 }
 
 // on submit update the task info and refresh the task list pane
 function handleEditTaskSaveOnClick(e) {
-	e.preventDefault(); // stop form from reloading the page
+	e.preventDefault(); 
 
-    if (!taskBeingEdited) return; // safety
+    if (!taskBeingEdited) return; 
 
     console.debug(`Saving task: ${taskBeingEdited.title}`);
 
@@ -255,7 +291,7 @@ function handleEditTaskSaveOnClick(e) {
     taskBeingEdited.dueDate = taskDetailForm.elements["due-date"].value;
     taskBeingEdited.notes = taskDetailForm.elements["notes"].value.trim();
 
-    // Update PRIORITY (important)
+    // Update PRIORITY
     const selectedPriority = taskDetailForm.querySelector('input[name="priority"]:checked');
     taskBeingEdited.priority = selectedPriority ? Number(selectedPriority.value) : 0;
 
@@ -264,19 +300,7 @@ function handleEditTaskSaveOnClick(e) {
 
     console.debug("Task saved:", taskBeingEdited);
 
-	// -----------------------------
-    // CLEAR FORM AFTER SAVING
-    // -----------------------------
-    taskDetailForm.reset();
-
-    // Reset dropdown
-    taskDetailForm.elements["category"].value = "default";
-
-    // Reset priority (None = 0)
-    const nonePriority = taskDetailForm.querySelector(
-        'input[name="priority"][value="0"]'
-    );
-    if (nonePriority) nonePriority.checked = true;
+	clearTaskDetailsPanel();
 
     // Stop editing mode
     taskBeingEdited = null;
@@ -316,4 +340,54 @@ function savePopup() {
 }
 
 
+function renderSubtask(subtask) {
+	const li = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    // Restore checkbox state if subtask was already completed
+    if (subtask.dateCompleted !== null) {
+        checkbox.checked = true;
+    }
+
+    checkbox.addEventListener("change", function () {
+        if (this.checked) {
+            // set if it wasn't completed before
+            if (subtask.dateCompleted === null) {
+                subtask.dateCompleted = Date.now();
+            }
+        } else {
+            subtask.dateCompleted = null; // unmark
+        }
+    });
+
+    const span = document.createElement("span");
+    span.textContent = subtask.title;
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+
+    // Insert before the last row (the input field)
+    const lastRow = subtaskListUI.lastElementChild;
+    subtaskListUI.insertBefore(li, lastRow);
+}
+
+function clearTaskDetailsPanel() {
+    // Clear main form
+    taskDetailForm.reset();
+
+    // Reset category dropdown
+    taskDetailForm.elements["category"].value = "default";
+
+    // Reset priority None
+    const nonePriority = taskDetailForm.querySelector(
+        'input[name="priority"][value="0"]'
+    );
+    if (nonePriority) nonePriority.checked = true;
+
+    // Clear all subtasks except input row
+    const subtaskItems = subtaskListUI.querySelectorAll("li:not(:last-child)");
+    subtaskItems.forEach(li => li.remove());
+}
 
