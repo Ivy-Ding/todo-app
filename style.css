@@ -11,13 +11,16 @@ body h1 {
     margin-bottom: 10px;
 }
 
+
 nav {
     display: flex;
     flex-direction: row;
-    width: 200px;
-    border: none;
     padding-top: 20px;
-    margin-left: 264px;
+    margin: 0 auto;           /* center the nav like the page */
+    justify-content: flex-start;
+    max-width: 780px;         /* match your page/pane max-width */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 nav button {
