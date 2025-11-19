@@ -17,6 +17,7 @@ nav {
     width: 200px;
     border: none;
     padding-top: 20px;
+    margin-left: 264px;
 }
 
 nav button {
@@ -66,6 +67,7 @@ nav button::before {
 .page {
     height: 650px; /* total container height */
     display: flex;
+    justify-content: center;
     margin: 0 auto;
 }
 
@@ -301,14 +303,14 @@ label[for="category"] select {
 }
 
 
-
 label[for="due-date"] {
     display: flex;
     align-items: center;         /* vertical alignment */
     font-size: 24px;
     font-weight: bold;
-    gap: 10px;   
+    gap: 12px;   
     padding: auto;                /* space between logo and text */
+    margin-bottom: 18px;
 }
 
 label[for="due-date"]::before {
@@ -335,6 +337,26 @@ label[for="due-date"] input {
     background: #fff;
 }
 
+label[for="priority"] {
+    display: flex;
+    align-items: center;         /* vertical alignment */
+    font-size: 24px;
+    font-weight: bold;
+    gap: 12px;   
+    padding: auto;                /* space between logo and text */
+}
+
+label[for="priority"]::before {
+    content: "";
+    display: inline-block;
+    width: 30px;                 /* icon size */
+    height: 30px;
+    background-image: url('Logo/danger.png'); /* your icon path */
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 6px;
+}
+
 .form-group {
     display: flex;
     flex-direction: row;
@@ -342,30 +364,6 @@ label[for="due-date"] input {
     gap: 16px;
     margin-top: 10px;
     border: none;
-}
-
-.form-group legend {
-    display: flex;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 20px;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-    /* Add an icon with ::before */
-    position: relative;
-}
-
-.form-group legend::before {
-    content: "";
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    background-image: url('Logo/danger.png'); /* replace with your exclamation icon path */
-    background-repeat: no-repeat;
-    background-size: contain;
-    margin-right: 13px;
-    vertical-align: middle;
 }
 
 .form-group label {
@@ -519,6 +517,7 @@ label[for="subtasks"] ul {
     background-size: contain;
     background-image: url(Logo/delete.png);
     vertical-align: middle;
+    margin-bottom: 3px;
 
 }
 
@@ -535,10 +534,11 @@ label[for="subtasks"] ul {
 #close-details::before, #save-task::before {
     content: "";
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     background-size: contain;
     vertical-align: middle;
+    margin-bottom: 3px;
 }
 #close-details::before {
     background-image: url(Logo/close.png);
