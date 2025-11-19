@@ -74,7 +74,7 @@
 					<label for="category"
 						>Category:
 						<select id="category" name="category">
-							<option value="" disabled selected>Select a category...</option>
+							<option value="default" disabled selected>Select a category...</option>
 							<option value="add-new">+ Add New Category</option>
 						</select>
 					</label>
@@ -91,31 +91,27 @@
 					<fieldset class="form-group">
 
 						<label>
-							<input type="radio" name="priority" value="3" />
-							High
+							<input type="radio" name="priority" value="3">
+							<span>High</span>
 						</label>
-
+					
 						<label>
-							<input type="radio" name="priority" value="2" />
-							Medium
+							<input type="radio" name="priority" value="2">
+							<span>Medium</span>
 						</label>
-
+					
 						<label>
-							<input type="radio" name="priority" value="1" />
-							Low
+							<input type="radio" name="priority" value="1">
+							<span>Low</span>
 						</label>
-
+					
 						<label>
-							<input
-								type="radio"
-								name="priority"
-								value="0"
-								checked
-							/>
-							None
+							<input type="radio" name="priority" value="0">
+							<span>None</span>
 						</label>
+					
 					</fieldset>
-
+					
 					<label for="notes"
 						>Notes<br/>
 						<textarea id="notes" name="notes"></textarea>
@@ -137,25 +133,16 @@
 								<button id="new-subtask-button">Add</button>
 							</li>
 						</ul>
-					</label>
-				</form>
-				<div class="button-row">
-					<button aria-label="delete-task" id="delete-task">
-						Delete
-					</button>
-					<div>
-						<button aria-label="close-details" id="close-details">
-							Close
-						</button>
-						<button
-							aria-label="save-task"
-							id="save-task"
-							type="submit"
-						>
-							Save
-						</button>
-					</div>
-				</div>
+					</label>				
+						<div class="button-row">
+							<button id="delete-task">Delete</button>
+						
+							<div>
+								<button id="close-details">Close</button>
+								<button id="save-task">Save</button>
+							</div>
+						</div>	
+					</form> 
 			</section>
 		</div>
 		<!-- Popup Modal -->

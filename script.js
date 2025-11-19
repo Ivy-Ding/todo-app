@@ -52,21 +52,22 @@ const popupClose = document.getElementById('popup-close');
 
 popupSave.addEventListener('click', () => {
 	if (popupSaveCallback) popupSaveCallback(popupInput.value);
-	closePopup();
+	savePopup();
 });
 
 popupClose.addEventListener('click', closePopup);
 
-categorySelect.addEventListener('click', function () {
-	if (this.value === 'add-new') {
-		openPopup("Add New Category", "", (newCat) => {
-			newCat = newCat.trim();
-			if (newCat !== "") {
-				handleAddNewCategoryOnClick(newCat);
-			} 
-		});
-	}
+categorySelect.addEventListener("click", function () {
+    if (this.value === "add-new") {
+        openPopup("Add New Category", "", (newCat) => {
+            newCat = newCat.trim();
+            if (newCat !== "") {
+                handleAddNewCategoryOnClick(newCat);
+            }
+        });
+    }
 });
+
 
 closeDetailsButton.addEventListener('click', (e) => {
 	//    todo
@@ -83,9 +84,9 @@ const PRIORITIES = {
 let taskList = [];
 let categoriesList = [];
 
-let taskBeingEdited = null; //global var to store the task being edited in task details form
+let taskBeingEdited = null; 
 
-let popupSaveCallback = null;//global var to store the callback function for the popup save button
+let popupSaveCallback = null;
 
 //helper methods --------------------
 
@@ -204,28 +205,15 @@ function handleAddNewCategoryOnClick(categoryName) {
 		return;
 	}
 
-	// add to list
 	categoriesList.push(categoryName);
 
-	// update the dropdown UI
-	const categorySelect = document.getElementById('category');
+    const opt = document.createElement("option");
+    opt.value = categoryName;
+    opt.textContent = categoryName;
 
-	categorySelect.innerHTML = "";
+    categorySelect.appendChild(opt);
 
-	const addNewOption = document.createElement('option');
-	addNewOption.value = 'add-new';
-	addNewOption.textContent = '+ Add New Category';
-	categorySelect.appendChild(addNewOption);
-
-	for (const cat of categoriesList) {
-		const opt = document.createElement('option');
-		opt.value = cat;
-		opt.textContent = cat;
-		categorySelect.appendChild(opt);
-	}
-
-	//auto-select newly added category
-	categorySelect.value = categoryName;
+    categorySelect.value = categoryName;
 }
 
 // pre-fill the task details form with info from the given task,
@@ -238,20 +226,60 @@ function handleEditOnClick(task) {
 
 	// fill form fields
 	taskDetailForm.elements['title'].value = task.title || '';
-	taskDetailForm.elements['category'].value = task.category || 'add-new';
+	taskDetailForm.elements['category'].value = task.category || 'default';
 	taskDetailForm.elements['due-date'].value = task.dueDate || '';
 	taskDetailForm.elements['notes'].value = task.notes || '';
 
-	// priority radio buttons fill
+		// priority radio buttons fill
 	const radios = taskDetailForm.querySelectorAll('input[name="priority"]');
+
+	// if no priority exists, use default = 0 (None)
+	const priorityValue = task.priority != null ? Number(task.priority) : 0;
+
 	radios.forEach(r => {
-		r.checked = Number(r.value) === Number(task.priority);
+		r.checked = Number(r.value) === priorityValue;
 	});
 }
 
 // on submit update the task info and refresh the task list pane
-function handleEditTaskSaveOnClick(task) {
-	console.debug(`handleEditTaskSaveOnClick(${task.title})`);
+function handleEditTaskSaveOnClick(e) {
+	e.preventDefault(); // stop form from reloading the page
+
+    if (!taskBeingEdited) return; // safety
+
+    console.debug(`Saving task: ${taskBeingEdited.title}`);
+
+    // Update the basic fields
+    taskBeingEdited.title = taskDetailForm.elements["title"].value.trim();
+    taskBeingEdited.category = taskDetailForm.elements["category"].value;
+    taskBeingEdited.dueDate = taskDetailForm.elements["due-date"].value;
+    taskBeingEdited.notes = taskDetailForm.elements["notes"].value.trim();
+
+    // Update PRIORITY (important)
+    const selectedPriority = taskDetailForm.querySelector('input[name="priority"]:checked');
+    taskBeingEdited.priority = selectedPriority ? Number(selectedPriority.value) : 0;
+
+    // Refresh list UI
+    refreshTaskListPane();
+
+    console.debug("Task saved:", taskBeingEdited);
+
+	// -----------------------------
+    // CLEAR FORM AFTER SAVING
+    // -----------------------------
+    taskDetailForm.reset();
+
+    // Reset dropdown
+    taskDetailForm.elements["category"].value = "default";
+
+    // Reset priority (None = 0)
+    const nonePriority = taskDetailForm.querySelector(
+        'input[name="priority"][value="0"]'
+    );
+    if (nonePriority) nonePriority.checked = true;
+
+    // Stop editing mode
+    taskBeingEdited = null;
 }
 
 // delete the task from task list, this is undoable in archive tab
@@ -278,5 +306,14 @@ function openPopup(title, defaultValue, onSave) {
 function closePopup() {
 	popupOverlay.style.display = "none";
 	popupSaveCallback = null;
+
+	categorySelect.value = "default";
 }
+
+function savePopup() {
+	popupOverlay.style.display = "none";
+	popupSaveCallback = null;
+}
+
+
 
