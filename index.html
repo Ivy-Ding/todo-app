@@ -21,7 +21,7 @@
 	<body>
 		<h1>Todo App</h1>
 		<nav>
-			<button id="tasks-button">Tasks</button>
+			<button id="tasks-button" class="active">Tasks</button>
 			<button id="archive-button">Archive</button>
 			<button id="settings-button">Settings</button>
 		</nav>
@@ -57,17 +57,19 @@
 					<h2>Task Details</h2>
 				</div>
 				<form id="task-details-form">
-					<input
-						aria-label="“title”"
-						type="text"
-						id="title"
-						name="title"
-						placeholder="Title Here"
-						required
-						required
-						oninvalid="this.setCustomValidity('Task title cannot be empty')"
-						oninput="this.setCustomValidity('')"
-					/>
+					<label for="title" class="title-label">
+						<span class="title-required">*</span>
+						<input
+							aria-label="title"
+							type="text"
+							id="title"
+							name="title"
+							placeholder="Title Here"
+							required
+							oninvalid="this.setCustomValidity('Task title cannot be empty')"
+							oninput="this.setCustomValidity('')"
+						/>
+					</label>
 
 					<label for="category"
 						>Category:
@@ -82,8 +84,11 @@
 						<input type="date" id="due-date" name="due-date" />
 					</label>
 
+					<label for="priority"
+						>Priority:
+					</label> <!-- moved this here because the form group was making it off-centre -->
+
 					<fieldset class="form-group">
-						<legend>Priority</legend>
 
 						<label>
 							<input type="radio" name="priority" value="3" />
@@ -112,11 +117,11 @@
 					</fieldset>
 
 					<label for="notes"
-						>Notes<br />
+						>Notes<br/>
 						<textarea id="notes" name="notes"></textarea>
 					</label>
 
-					<label
+					<label for="subtasks"
 						>Subtasks
 						<ul id="subtask-list">
 							<li>
