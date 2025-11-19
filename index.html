@@ -20,7 +20,7 @@
 
 	<body>
 		<nav>
-			<button id="tasks-button">Tasks</button>
+			<button id="tasks-button" class="active">Tasks</button>
 			<button id="archive-button">Archive</button>
 			<button id="settings-button">Settings</button>
 		</nav>
@@ -82,8 +82,11 @@
 						<input type="date" id="due-date" name="due-date" />
 					</label>
 
+					<label for="priority"
+						>Priority:
+					</label> <!-- moved this here because the form group was making it off-centre -->
+
 					<fieldset class="form-group">
-						<legend>Priority</legend>
 
 						<label>
 							<input type="radio" name="priority" value="3" />
@@ -112,11 +115,11 @@
 					</fieldset>
 
 					<label for="notes"
-						>Notes<br />
+						>Notes<br/>
 						<textarea id="notes" name="notes"></textarea>
 					</label>
 
-					<label 
+					<label for="subtasks"
 						>Subtasks
 						<ul id="subtask-list">
 							<li>
