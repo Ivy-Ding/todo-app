@@ -152,11 +152,20 @@ nav button::before {
     padding: 10px;
 }
 
+.page .pane .body ul {
+    padding: 0 5px;
+    margin: 0;
+    list-style-type: none; 
+}
+
 .page .pane .body li {
     padding: 10px;
     color: black;
     display: flex;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    border: 2px solid #ff9f1a;
+    border-radius: 10px;
+    gap: 10px
 }
 
 .page .pane .body li:nth-child(odd) {
