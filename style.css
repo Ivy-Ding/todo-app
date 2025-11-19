@@ -251,6 +251,8 @@ nav button::before {
     padding: 4px 10px;
     gap: 10px;
     position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 #task-details-form input#title {
@@ -466,13 +468,14 @@ label[for="notes"] {
 }
 
 label[for="notes"] textarea {
-    width: vh;
-    height: vh;
+    width: 750px;
     font-size: 14px;
     border-radius: 5px;
     border: 2px solid #ff9f1a;
     padding: 8px 12px;
     box-sizing: border-box;
+    resize: vertical;
+    max-height: 250px;
 }
 
 label[for="subtasks"] {
@@ -492,10 +495,8 @@ label[for="subtasks"] ul {
 .button-row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     gap: 18px;
-    margin-top: 24px;
-    margin-left: 10px;
+    margin: 5px;
     justify-content: space-between;
 }
 
@@ -517,6 +518,7 @@ label[for="subtasks"] ul {
 #delete-task {
     border-color: #891d22;
     color: #891d22;
+    height: 44px;
 }
 #delete-task::before {
     content: "";
@@ -526,7 +528,8 @@ label[for="subtasks"] ul {
     background-size: contain;
     background-image: url(Logo/delete.png);
     vertical-align: middle;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
+    margin-right: 6px;
 
 }
 
@@ -543,17 +546,20 @@ label[for="subtasks"] ul {
 #close-details::before, #save-task::before {
     content: "";
     display: inline-block;
-    width: 18px;
-    height: 18px;
     background-size: contain;
     vertical-align: middle;
     margin-bottom: 3px;
+    margin-right: 6px;
 }
 #close-details::before {
     background-image: url(Logo/close.png);
+    width: 18px;
+    height: 18px;
 }
 #save-task::before {
     background-image: url(Logo/diskette.png);
+    width: 20px;
+    height: 20px;
 }
 
 #close-details:hover, #save-task:hover {
@@ -566,6 +572,7 @@ label[for="subtasks"] ul {
 #save-task {
     border-color: #ff9f1a;
     color: #ff9f1a;
+    margin-right: 0px;
 }
 
 #save-task:hover {
