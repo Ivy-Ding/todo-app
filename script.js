@@ -32,6 +32,28 @@ class Task {
 }
 
 //DOM consts & handlers --------------------------------------------
+//PANES FOR TAB SWITCHING
+const archiveButton = document.getElementById('archive-button');
+const archivePage = document.getElementById('archive-page');
+archiveButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.archive);
+});
+
+const settingsButton = document.getElementById('settings-button');
+const settingsPage = document.getElementById('settings-page');
+settingsButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.settings);
+});
+
+const taskButton = document.getElementById('tasks-button');
+taskButton.addEventListener('click', (e) => {
+	setActivePage(PAGES.home);
+});
+const tasksPage = document.getElementById('tasks-page');
+const tasksListPane = document.getElementById('tasks-list-pane');
+const taskDetailsPane = document.getElementById('task-details-pane');
+const homeSidePane = document.getElementById('home-side-pane');
+
 //TASK LIST PAGE
 const taskListContainer = document.getElementById('task-list-container');
 const newTaskForm = document.getElementById('new-task-form');
@@ -94,7 +116,7 @@ newSubtaskButton.addEventListener("click", function (e) {
 
 
 closeDetailsButton.addEventListener('click', (e) => {
-	//    todo
+	setActivePage(PAGES.home);
 });
 
 //variables---------------------------------------------
@@ -105,12 +127,18 @@ const PRIORITIES = {
 	high: 3,
 };
 
-let taskList = [];
+let taskList = [new Task('sample task')];
 let categoriesList = [];
 
 let taskBeingEdited = null; 
 
 let popupSaveCallback = null;
+const PAGES = {
+	home: 'home',
+	details: 'details',
+	archive: 'archive',
+	settings: 'settings',
+};
 
 //helper methods --------------------
 
@@ -275,6 +303,9 @@ function handleEditOnClick(task) {
 	// Render existing subtasks
 	task.subtasks.forEach(st => renderSubtask(st));
 
+	//swap tabs
+	setActivePage(PAGES.details);
+	//todo: rest of the edit logic here...
 }
 
 // on submit update the task info and refresh the task list pane
@@ -391,3 +422,78 @@ function clearTaskDetailsPanel() {
     subtaskItems.forEach(li => li.remove());
 }
 
+// Tab Switch ---------------------------------------------------------------
+function hideElement(element) {
+	element.style.display = 'none';
+}
+
+function showElement(element) {
+	//note: currently all pages & divs are flex and not blocks,
+	// if future updates change this, this code needs to be updated as well
+	element.style.display = 'flex';
+}
+
+//input: a page from const PAGES
+//function: show and hide the corresponding pages and panes
+function setActivePage(newPage) {
+	console.debug(`renderActivePage(${newPage})`);
+	switch (newPage) {
+		case PAGES.home:
+			//update buttons
+			taskButton.classList.add('active');
+			archiveButton.classList.remove('active');
+			settingsButton.classList.remove('active');
+			//show & hide pages
+			showElement(tasksPage);
+			hideElement(archivePage);
+			hideElement(settingsPage);
+			//show & hide panes
+			showElement(tasksListPane);
+			showElement(homeSidePane);
+			hideElement(taskDetailsPane);
+			break;
+		case PAGES.details:
+			//update buttons
+			taskButton.classList.add('active');
+			archiveButton.classList.remove('active');
+			settingsButton.classList.remove('active');
+			//show & hide pages
+			showElement(tasksPage);
+			hideElement(archivePage);
+			hideElement(settingsPage);
+			//show & hide panes
+			showElement(tasksListPane);
+			showElement(taskDetailsPane);
+			hideElement(homeSidePane);
+			break;
+		case PAGES.archive:
+			//update buttons
+			archiveButton.classList.add('active');
+			taskButton.classList.remove('active');
+			settingsButton.classList.remove('active');
+			//show & hide pages
+			showElement(archivePage);
+			hideElement(tasksPage);
+			hideElement(settingsPage);
+			break;
+		case PAGES.settings:
+			//update buttons
+			settingsButton.classList.add('active');
+			taskButton.classList.remove('active');
+			archiveButton.classList.remove('active');
+			//show & hide pages
+			showElement(settingsPage);
+			hideElement(archivePage);
+			hideElement(tasksPage);
+			break;
+		default:
+			console.error(`Unknown page encountered: ${newPage}`);
+	}
+}
+
+function main() {
+	setActivePage(PAGES.home)
+	refreshTaskListPane()
+}
+
+main()
