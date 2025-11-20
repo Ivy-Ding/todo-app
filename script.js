@@ -133,6 +133,7 @@ let categoriesList = [];
 let taskBeingEdited = null; 
 
 let popupSaveCallback = null;
+
 const PAGES = {
 	home: 'home',
 	details: 'details',
@@ -278,6 +279,9 @@ function handleAddNewCategoryOnClick(categoryName) {
 function handleEditOnClick(task) {
 	console.debug(`handleEditOnClick(${task.title})`);
 
+	//swap tabs
+	setActivePage(PAGES.details);
+
 	//task being edited
 	taskBeingEdited = task;
 
@@ -302,10 +306,7 @@ function handleEditOnClick(task) {
 
 	// Render existing subtasks
 	task.subtasks.forEach(st => renderSubtask(st));
-
-	//swap tabs
-	setActivePage(PAGES.details);
-	//todo: rest of the edit logic here...
+	
 }
 
 // on submit update the task info and refresh the task list pane
