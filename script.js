@@ -116,7 +116,14 @@ newSubtaskButton.addEventListener("click", function (e) {
 
 
 closeDetailsButton.addEventListener('click', (e) => {
+	// Switch back to Home page
 	setActivePage(PAGES.home);
+
+	// Clear everything
+	clearTaskDetailsPanel();
+
+	// Exit editing mode
+	taskBeingEdited = null;
 });
 
 //variables---------------------------------------------
