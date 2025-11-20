@@ -224,14 +224,21 @@ function renderTaskToLi(task) {
 	checkbox.addEventListener('change', function () {
 		if (this.checked) {
 			task.dateCompleted = Date.now();
+	
+			// Remove from active list visually
 			li.parentNode.removeChild(li);
+	
+			// If user was editing same task: close details
+			if (taskBeingEdited === task) {
+				clearTaskDetailsPanel();
+				taskBeingEdited = null;
+			}
+	
+			// Move into archive completed
+			refreshArchiveCompletedPane();
 		}
-		// If user was editing this same task then clear detail panel when done as marked
-        if (taskBeingEdited === task) {
-            clearTaskDetailsPanel();
-            taskBeingEdited = null;
-        }
 	});
+	
 
 	const editButton = document.createElement('button');
 	editButton.textContent = 'Edit';
@@ -273,6 +280,64 @@ function refreshTaskListPane(filter = null, sort = null) {
 
 	taskListContainer.replaceChildren(htmlToDisplay);
 }
+
+function refreshArchiveCompletedPane() {
+    const completedList = document.getElementById("completed-tasks-list");
+
+    // Clear before re-rendering
+    completedList.innerHTML = "";
+
+    // Only tasks that have a non-null/non-undefined dateCompleted AND are not deleted
+    taskList
+        .filter(t => t.dateCompleted != null && !t.dateDeleted)
+        .sort(compareByCreationTime)
+        .forEach(task => {
+            const li = document.createElement("li");
+            li.id = task.dateCreated;
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = true;
+
+            // Unchecking in archive → move back to active
+            checkbox.addEventListener("change", function () {
+                if (!this.checked) {
+                    task.dateCompleted = null;  // no completed date anymore
+                    refreshTaskListPane();
+                    refreshArchiveCompletedPane();
+                }
+            });
+
+            const title = document.createElement("span");
+            title.textContent = task.title;
+
+            // Only show date if the task object actually has a valid dateCompleted
+            const dateSpan = document.createElement("span");
+            let dateText = "";
+
+            if (task.dateCompleted != null) {
+                const d = new Date(task.dateCompleted);
+                if (!isNaN(d.getTime())) {
+                    dateText = d.toLocaleDateString();
+                }
+            }
+
+            // Only append date if we actually got a valid one
+            if (dateText !== "") {
+                dateSpan.textContent = dateText;
+                li.appendChild(checkbox);
+                li.appendChild(title);
+                li.appendChild(dateSpan);
+            } else {
+                li.appendChild(checkbox);
+                li.appendChild(title);
+            }
+
+            completedList.appendChild(li);
+        });
+}
+
+
 
 //TASK LIST PAGE event handler methods------------------------------------------------
 
@@ -571,6 +636,7 @@ function closeDeletePopup() {
 function main() {
 	setActivePage(PAGES.home)
 	refreshTaskListPane()
+	refreshArchiveCompletedPane()
 }
 
 main()
