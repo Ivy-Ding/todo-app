@@ -423,17 +423,40 @@ label[for="priority"]::before {
     color: #222;
 }
 
-/* When checked, brighter background */
-.form-group input[type="radio"]:checked + span,
-.form-group input[type="radio"]:focus + span {
-    background-color: #ffeded;
-    border-width: 3px;
+/* Make the WHOLE priority button stay active when selected */
+.form-group input[type="radio"]:checked + label,
+.form-group input[type="radio"]:checked + span {
+    color: #fff;
+}
+/* High ACTIVE */
+.form-group label:nth-of-type(1).active {
+    background-color: #891d22;
+    color: white;
+    border-color: #891d22;
 }
 
-/* Optional: add color backgrounds on checked states like your image */
-.form-group label input[type="radio"]:checked + label {
-    background: #f8d7da;
+/* Medium ACTIVE */
+.form-group label:nth-of-type(2).active {
+    background-color: #d9812e;
+    color: white;
+    border-color: #d9812e;
 }
+
+/* Low ACTIVE */
+.form-group label:nth-of-type(3).active {
+    background-color: #258725;
+    color: white;
+    border-color: #258725;
+}
+
+/* None ACTIVE */
+.form-group label:nth-of-type(4).active {
+    background-color: #222;
+    color: white;
+    border-color: #222;
+}
+
+
 
 /* Priority - High */
 .form-group label:nth-of-type(1):hover {

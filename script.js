@@ -160,6 +160,17 @@ deleteTaskButton.addEventListener("click", (e) => {
     });
 });
 
+// Priority active state styling
+document.querySelectorAll('.form-group input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        document.querySelectorAll('.form-group label').forEach(label => {
+            label.classList.remove('active');
+        });
+        radio.parentElement.classList.add('active');
+    });
+});
+
+
 
 //variables---------------------------------------------
 const PRIORITIES = {
@@ -344,6 +355,12 @@ function handleEditOnClick(task) {
 	radios.forEach(r => {
 		r.checked = Number(r.value) === priorityValue;
 	});
+
+	// Update active visual state
+	document.querySelectorAll('.form-group label').forEach(label => label.classList.remove('active'));
+	const checkedRadio = taskDetailForm.querySelector('input[name="priority"]:checked');
+	if (checkedRadio) checkedRadio.parentElement.classList.add('active');
+
 
 	
 	subtaskListUI.querySelectorAll("li:not(:last-child)").forEach(li => li.remove());
