@@ -126,6 +126,41 @@ closeDetailsButton.addEventListener('click', (e) => {
 	taskBeingEdited = null;
 });
 
+
+// Delete Popup Modal
+const deletePopupOverlay = document.getElementById("delete-popup-overlay");
+const deletePopupMessage = document.getElementById("delete-popup-message");
+const deletePopupCancel = document.getElementById("delete-popup-cancel");
+const deletePopupConfirm = document.getElementById("delete-popup-confirm");
+
+deletePopupCancel.addEventListener("click", closeDeletePopup);
+
+deletePopupConfirm.addEventListener("click", () => {
+    if (deleteCallback) deleteCallback();
+    closeDeletePopup();
+});
+
+deleteTaskButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (!taskBeingEdited) return;
+
+    const task = taskBeingEdited;
+
+    openDeletePopup(task, () => {
+        
+        task.dateDeleted = Date.now(); 
+
+        refreshTaskListPane();        
+
+        clearTaskDetailsPanel();      
+        taskBeingEdited = null;       
+
+        setActivePage(PAGES.home);    
+    });
+});
+
+
 //variables---------------------------------------------
 const PRIORITIES = {
 	none: 0,
@@ -140,6 +175,8 @@ let categoriesList = [];
 let taskBeingEdited = null; 
 
 let popupSaveCallback = null;
+
+let deleteCallback = null;
 
 const PAGES = {
 	home: 'home',
@@ -501,6 +538,18 @@ function setActivePage(newPage) {
 			console.error(`Unknown page encountered: ${newPage}`);
 	}
 }
+
+function openDeletePopup(task, callback) {
+    deletePopupMessage.textContent = `Are you sure you want to delete "${task.title}"?`;
+    deleteCallback = callback;
+    deletePopupOverlay.style.display = "flex";
+}
+
+function closeDeletePopup() {
+    deletePopupOverlay.style.display = "none";
+    deleteCallback = null;
+}
+
 
 function main() {
 	setActivePage(PAGES.home)
