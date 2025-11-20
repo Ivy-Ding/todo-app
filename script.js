@@ -332,6 +332,9 @@ function handleEditTaskSaveOnClick(e) {
 
     console.debug("Task saved:", taskBeingEdited);
 
+	// Switch back to home page 
+	setActivePage(PAGES.home);
+
 	clearTaskDetailsPanel();
 
     // Stop editing mode
