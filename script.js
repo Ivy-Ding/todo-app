@@ -337,6 +337,61 @@ function refreshArchiveCompletedPane() {
         });
 }
 
+function refreshArchiveDeletedPane() {
+    const deletedList = document.getElementById("recently-deleted-list");
+
+    // Clear UI
+    deletedList.innerHTML = "";
+
+    taskList
+        .filter(t => t.dateDeleted != null)   // only deleted tasks
+        .sort(compareByCreationTime)
+        .forEach(task => {
+
+            const li = document.createElement("li");
+            li.id = task.dateCreated;
+
+            // checkbox (just a selector, does not change state)
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+
+            // title
+            const title = document.createElement("span");
+            title.textContent = task.title;
+
+            // undelete button
+            const btn = document.createElement("button");
+            btn.textContent = "Undelete";
+
+			btn.addEventListener("click", () => {
+
+				task.dateDeleted = null;
+			
+				// checkbox state decides where the task goes
+				if (checkbox.checked) {
+					// move to completed
+					task.dateCompleted = Date.now();
+					refreshArchiveCompletedPane();
+				} else {
+					// move to active
+					task.dateCompleted = null;
+					refreshTaskListPane();
+				}
+			
+				refreshArchiveDeletedPane(); // always remove from deleted list
+			});
+			
+			
+
+            li.appendChild(checkbox);
+            li.appendChild(title);
+            li.appendChild(btn);
+
+            deletedList.appendChild(li);
+        });
+}
+
+
 
 
 //TASK LIST PAGE event handler methods------------------------------------------------
@@ -605,6 +660,9 @@ function setActivePage(newPage) {
 			showElement(archivePage);
 			hideElement(tasksPage);
 			hideElement(settingsPage);
+
+			refreshArchiveDeletedPane();
+    		refreshArchiveCompletedPane();
 			break;
 		case PAGES.settings:
 			//update buttons
@@ -637,6 +695,7 @@ function main() {
 	setActivePage(PAGES.home)
 	refreshTaskListPane()
 	refreshArchiveCompletedPane()
+	refreshArchiveDeletedPane();
 }
 
 main()
