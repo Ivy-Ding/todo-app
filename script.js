@@ -306,6 +306,7 @@ function renderTaskToLi(task) {
 				// Move into archive completed
 				refreshArchiveCompletedPane();
 			}, 200);
+			refreshStatusPane();
 		}
 	});
 
@@ -488,6 +489,7 @@ function handleAddTaskOnClick(e) {
 
 	// update list
 	refreshTaskListPane();
+	refreshStatusPane();
 }
 
 // push category name to categoriesList, then update the category DOM drodown
@@ -560,7 +562,9 @@ function handleEditOnClick(task) {
 	);
 	if (checkedRadio) checkedRadio.parentElement.classList.add('active');
 
-	subtaskListUI.querySelectorAll('li:not(:last-child)').forEach((li) => li.remove());
+	subtaskListUI
+		.querySelectorAll('li:not(:last-child)')
+		.forEach((li) => li.remove());
 
 	// Render existing subtasks
 	task.subtasks.forEach((st) => renderSubtask(st));
@@ -584,10 +588,13 @@ function handleEditTaskSaveOnClick(e) {
 	const selectedPriority = taskDetailForm.querySelector(
 		'input[name="priority"]:checked'
 	);
-	taskBeingEdited.priority = selectedPriority ? Number(selectedPriority.value) : 0;
+	taskBeingEdited.priority = selectedPriority
+		? Number(selectedPriority.value)
+		: 0;
 
 	// Refresh list UI
 	refreshTaskListPane();
+	refreshStatusPane();
 
 	console.debug('Task saved:', taskBeingEdited);
 
@@ -603,6 +610,7 @@ function handleEditTaskSaveOnClick(e) {
 // delete the task from task list, this is undoable in archive tab
 function handleDeleteTaskOnClick(task) {
 	task.dateDeleted = Date.now();
+	refreshStatusPane();
 }
 
 // show the filter dropdown then filter tasks and refresh task list pane
@@ -823,7 +831,9 @@ function handleTaskCompletedForReward() {
 		treeImage.style.transform = `scale(${1 + currentTreeStage * 0.1})`;
 
 		// Show success popup!
-		openInfoPopup(`HURRRAY! You grew a tree! You are now at stage ${currentTreeStage}!`);
+		openInfoPopup(
+			`HURRRAY! You grew a tree! You are now at stage ${currentTreeStage}!`
+		);
 
 		// Reset for next stage
 		tasksToNextGrowth = TASKS_PER_GROWTH_STAGE;
@@ -833,28 +843,92 @@ function handleTaskCompletedForReward() {
 
 // Function to apply a selected theme
 function applyTheme(themeName) {
-    const theme = THEMES[themeName];
-    if (!theme) return;
+	const theme = THEMES[themeName];
+	if (!theme) return;
 
-    // Get the :root element style sheet
-    const root = document.documentElement.style;
+	// Get the :root element style sheet
+	const root = document.documentElement.style;
 
-    // 1. FIX: Remove 'selected' class from ALL theme boxes
-    document.querySelectorAll('.theme').forEach(div => {
-        div.classList.remove('selected');
-    });
+	// 1. FIX: Remove 'selected' class from ALL theme boxes
+	document.querySelectorAll('.theme').forEach((div) => {
+		div.classList.remove('selected');
+	});
 
-    // 2. Apply main colors (unchanged)
-    root.setProperty('--primary-color', theme.primary);
-    root.setProperty('--border-color', theme.primary); // Border usually matches primary
+	// 2. Apply main colors (unchanged)
+	root.setProperty('--primary-color', theme.primary);
+	root.setProperty('--border-color', theme.primary); // Border usually matches primary
 
-    // 3. Apply priority colors (unchanged)
-    root.setProperty('--high-priority-color', theme.high);
-    root.setProperty('--medium-priority-color', theme.medium);
-    root.setProperty('--low-priority-color', theme.low);
-    
-    // 4. Apply 'selected' class to the CURRENT theme box
-    document.getElementById(themeName).classList.add('selected');
+	// 3. Apply priority colors (unchanged)
+	root.setProperty('--high-priority-color', theme.high);
+	root.setProperty('--medium-priority-color', theme.medium);
+	root.setProperty('--low-priority-color', theme.low);
+
+	// 4. Apply 'selected' class to the CURRENT theme box
+	document.getElementById(themeName).classList.add('selected');
+}
+
+function refreshStatusPane() {
+	console.debug('Refreshing status pane...');
+	console.debug(taskList);
+	const now = new Date();
+	const threeDaysLater = new Date(now).setDate(now.getDate() + 3);
+	const oneWeekLater = new Date(now).setDate(now.getDate() + 7);
+	const oneMonthLater = new Date(now).setDate(now.getDate() + 30);
+	const ongoingTasks = taskList.filter(isActive);
+	const completedTasks = taskList.filter(
+		(task) => task.dateCompleted && !task.dateDeleted
+	);
+
+	const priorityTasks = ongoingTasks.filter(
+		(task) => task.priority === PRIORITIES.high
+	).length;
+
+	const due3Days = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= threeDaysLater
+	).length;
+
+	const due1Week = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= oneWeekLater
+	).length;
+
+	const due1Month = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= oneMonthLater
+	).length;
+
+	const totalTasks = ongoingTasks.length;
+
+	const completedToday = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+
+		return completedDate.toDateString() === now.toDateString();
+	}).length;
+
+	const millisecondsInOneDay = 1000 * 60 * 60 * 24;
+	const completed1Week = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 7;
+	}).length;
+
+	const completed1Month = completedTasks.filter((t) => {
+		const completedDate = new Date(t.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 30;
+	}).length;
+
+	const completedTotal = completedTasks.length;
+
+	document.getElementById('priority-task-count').textContent = priorityTasks;
+	document.getElementById('due-3days-count').textContent = due3Days;
+	document.getElementById('due-1week-count').textContent = due1Week;
+	document.getElementById('due-1month-count').textContent = due1Month;
+	document.getElementById('total-task-count').textContent = totalTasks;
+	document.getElementById('completed-today-count').textContent =
+		completedToday;
+	document.getElementById('completed-1week-count').textContent =
+		completed1Week;
+	document.getElementById('completed-1month-count').textContent =
+		completed1Month;
+	document.getElementById('completed-total-count').textContent =
+		completedTotal;
 }
 
 function main() {
@@ -863,6 +937,7 @@ function main() {
 	refreshTaskListPane();
 	refreshArchiveCompletedPane();
 	refreshArchiveDeletedPane();
+	refreshStatusPane();
 }
 
 main();
