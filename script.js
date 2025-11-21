@@ -288,7 +288,11 @@ function renderTaskToLi(task) {
 
 			this.disabled = true;
 			editButton.disabled = true;
+
+			//mimic fade
+			li.style.opacity = '0.5';
 			setTimeout(() => {
+				li.style.opacity = '0.25';
 				// Remove from active list visually
 				li.parentNode.removeChild(li);
 
@@ -301,7 +305,7 @@ function renderTaskToLi(task) {
 
 				// Move into archive completed
 				refreshArchiveCompletedPane();
-			}, 1000);
+			}, 200);
 		}
 	});
 
