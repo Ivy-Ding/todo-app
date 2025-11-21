@@ -116,9 +116,9 @@ const THEMES = {
 	},
 	'theme-monochrome': {
 		primary: '#202020',
-		high: '#202020',
-		medium: '#202020',
-		low: '#202020',
+		high: '#720000ff',
+		medium: '#662000ff',
+		low: '#023f0aff',
 	},
 };
 
@@ -212,14 +212,16 @@ deleteTaskButton.addEventListener('click', (e) => {
 });
 
 // Priority active state styling
-document.querySelectorAll('.form-group input[type="radio"]').forEach((radio) => {
-	radio.addEventListener('change', () => {
-		document.querySelectorAll('.form-group label').forEach((label) => {
-			label.classList.remove('active');
+document
+	.querySelectorAll('.form-group input[type="radio"]')
+	.forEach((radio) => {
+		radio.addEventListener('change', () => {
+			document.querySelectorAll('.form-group label').forEach((label) => {
+				label.classList.remove('active');
+			});
+			radio.parentElement.classList.add('active');
 		});
-		radio.parentElement.classList.add('active');
 	});
-});
 
 // variables ---------------------------------------------
 const PRIORITIES = {
@@ -278,6 +280,7 @@ function renderTaskToLi(task) {
 	text.textContent = task.title;
 
 	const checkbox = document.createElement('input');
+	checkbox.setAttribute('aria-label', 'task check box');
 	checkbox.setAttribute('type', 'checkbox');
 	checkbox.addEventListener('change', function () {
 		if (this.checked) {

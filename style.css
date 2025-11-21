@@ -47,10 +47,10 @@ nav {
     justify-content: flex-start;
 }
 
-/* fall back button hover */
+/* task edit button hover */
 #task-list-container button:hover {
     background-color: var(--primary-color);
-    color: var(--primary-text-color);
+    color: white;
 }
 
 nav button {
