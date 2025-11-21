@@ -496,7 +496,7 @@ function refreshArchiveCompletedPane() {
 				if (!this.checked) {
 					task.dateCompleted = null; // no completed date anymore
 					showToast(
-						'Tip: unchecked tasks to go back to the "Task" pane...'
+						'Tip: unchecked tasks go back to the "Task" pane...'
 					);
 					refreshTaskListPane();
 					refreshArchiveCompletedPane();
@@ -572,7 +572,7 @@ function refreshArchiveDeletedPane() {
 
 			btn.addEventListener('click', () => {
 				showToast(
-					'Tip: Your undeleted and incomplete tasks go to Tasks pane...'
+					'Tip: Your undeleted tasks go to the Tasks pane if they are not marked as complete...'
 				);
 				task.dateDeleted = null;
 
