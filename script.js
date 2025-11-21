@@ -141,7 +141,12 @@ newSubtaskButton.addEventListener('click', function (e) {
 	}
 
 	const title = newSubtaskInput.value.trim();
-	if (title === '') return;
+	if (title === '') {
+		console.log('empty subtask');
+		newSubtaskInput.setCustomValidity('subtask title cannot be empty');
+		newSubtaskInput.reportValidity();
+		return;
+	}
 
 	const sub = new Subtask(title);
 	taskBeingEdited.subtasks.push(sub);
