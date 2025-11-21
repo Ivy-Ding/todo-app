@@ -183,16 +183,43 @@
 			</div>
 		</div>
 
-		<div id ="archive-page" class="page">	
-			<details id="recently-deleted-list">
-				<summary>Recently Deleted</summary>
-					<li id="123"><input type="checkbox" checked><span>sample task</span><button>Undelete</button></li>
-			</details>
-			<details id="completed-tasks-list">
-				<summary>Completed <button aria-label="filter">Filter</button></summary>
-					<li id="456"><input type="checkbox" checked><span>sample task</span><span>2025-11-10</span></li>
-			</details>
+		<div id="archive-page" class="page archive-layout">
+
+			<section class="pane">
+				<div class="header">
+					<h2>Recently Deleted</h2>
+				</div>
+				<div class="body archive-body">
+					<ul id="recently-deleted-list">
+						<li id="123">
+							<input type="checkbox" />
+							<span>sample task</span>
+							<button>Undelete</button>
+						</li>
+					</ul>
+				</div>
+			</section>
+			
+		
+			<section class="pane">
+				<div class="header">
+					<h2>Completed</h2>
+					<div class="right">
+						<button aria-label="filter">Filter</button>
+					</div>
+				</div>
+				<div class="body archive-body">
+					<ul id="completed-tasks-list">
+						<li id="456">
+							<input type="checkbox" checked>
+						</li>
+					</ul>
+				</div>
+			</section>
+			
+		
 		</div>
+		
 
 		<div id ="settings-page" class="page">
 			<fieldset id="setting-left-pane" class="pane-fixed-dock-20">
