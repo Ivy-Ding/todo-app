@@ -1,0 +1,926 @@
+/* constant for colour*/
+:root{ 
+    /* Define the variable with two hyphens: --variable-name */
+    --primary-color: #ff9f1a;
+    /* Define colors that resemble the PDF prototype for a clean, professional look */
+    --primary-text-color: #222;
+    --secondary-background: #fff;
+    --border-color: #ff9f1a;
+    --high-priority-color: #891d22; /* Reddish */
+    --medium-priority-color: #d9812e; /* Orange/Brown */
+    --low-priority-color: #258725; /* Green */
+}
+
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 20px;
+    color: var(--primary-text-color);
+}
+
+body h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* --- NAVIGATION BAR --- */
+nav {
+    display: flex;
+    flex-direction: row;
+    /* ALIGNMENT FIX: Set max-width and center to align with the .page container */
+    max-width: 1000px; /* Match .page max-width */
+    border: none;
+    padding-top: 20px;
+    margin: 0 auto; /* Center the navigation bar */
+    /* Ensure the buttons start from the left of the centered nav container */
+    justify-content: flex-start;
+}
+
+nav button {
+    flex: 0 0 auto;
+    padding: 10px;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    font-size: 16px;
+    font-weight: bold;
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+    /* Adjusted: Remove the border to match the clean prototype tabs */
+    border: 1px solid var(--primary-color);
+    border-bottom: 3px solid transparent; /* For active/focus indication */
+}
+
+nav button:hover,
+nav button.active,
+nav button:focus {
+    /* Only apply border to bottom for selected/active tab */
+    background-color: var(--secondary-background); /* Keep background white */
+    border-bottom: 3px solid var(--primary-color);
+    font-weight: bold;
+    outline: none;
+    /* Remove background change to match prototype's clean tab look */
+}
+
+nav button.active {
+    color: var(--primary-color);
+}
+
+nav button::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+}
+
+#tasks-button::before {
+    fill: rgb(255, 38, 0);
+    background-image: url(Logo/clipboard.png);
+}
+
+#archive-button::before {
+    background-image: url(Logo/archive.png);
+}
+
+#settings-button::before {
+    background-image: url(Logo/settings.png);
+}
+
+/* --- MAIN PAGE LAYOUT (Tasks Page) --- */
+.page {
+    height: 85vh; /* total container height */
+    /* *** MODIFIED FOR 2 COLUMNS *** */
+    /* Layout: TaskList (240px) | TaskDetails (1fr) */
+    grid-template-columns: 1fr 2fr; 
+    display: grid;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+    border: 1px solid var(--primary-color);
+}
+/* #tasks-page.details-only selector is no longer needed as the main grid is 2 columns */
+
+
+.page .pane {
+    display: flex;
+    flex-direction: column;
+    border: none; 
+    height: 100%;
+    min-height: 0;
+
+}
+/* Vertical divider between the two columns */
+#tasks-list-pane {
+    border-radius: 0 0 0 5px;
+    border-right: 1px solid var(--primary-color);
+}
+
+#task-details-pane {
+    flex: 0 0 66%;
+    border-radius: 0 0 5px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#home-side-pane {
+    flex: 0 0 66%;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+#task-rewards-pane,
+#task-status-pane {
+    flex: 1;
+    border: none; 
+    border-radius: 0;
+    padding: 10px;
+}
+#task-rewards-pane {
+    border-bottom: 1px solid var(--border-color);
+}
+
+
+/* --- CSS for Side-by-Side Status Lists --- */
+#task-status-pane .body {
+    display: flex;
+    flex-direction: row; 
+    padding: 15px 10px; 
+    gap: 20px; 
+}
+
+#task-status-pane .body > div {
+    flex: 1; 
+    padding: 0 10px; 
+    min-width: 0; 
+}
+
+#task-status-pane h3 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-bottom: 2px solid var(--border-color); 
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#task-status-pane .body ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#task-status-pane .body li {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 3px 0;
+    border: none; 
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+#task-status-pane span {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* --- PANE HEADER --- */
+.page .pane .header {
+    display: flex;
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 8px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+}
+
+.page .pane .header h2 {
+    font-size: 20px; 
+    margin: 0 auto;
+}
+
+.page .pane .header .right {
+    display: inline-flex;
+    gap: 5px;
+}
+
+.page .pane .header button {
+    flex: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    margin-left: auto;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.page .pane .header button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.page .pane .header .right button::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-size: contain;
+    filter: none; 
+}
+
+.right button[aria-label="filter"]::before {
+    background-image: url(Logo/filter.png);
+}
+
+.right button[aria-label="sort"]::before {
+    background-image: url(Logo/sort.png);
+}
+
+/* --- PANE BODY (Task List) --- */
+.page .pane .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.page .pane .body ul {
+    padding: 0 5px;
+    margin: 0;
+    list-style-type: none; 
+}
+
+.page .pane .body li {
+    padding: 10px;
+    color: black;
+    display: flex;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color); 
+    border-radius: 10px;
+    gap: 10px;
+    background-color: #fff; 
+}
+
+.page .pane .body li:nth-child(odd) {
+    background-color: #fff; 
+}
+
+.page .pane .body li button {
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    margin-left: auto;
+    display: inline-flex;
+    gap: 5px;
+}
+
+/* --- QUICK ADD FORM --- */
+#task-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 600px;
+    border: none;
+    box-sizing: border-box;
+    padding: 0 0 10px 0;
+}
+
+#new-task-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
+#new-task-form input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 14px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color); 
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#new-task-form button {
+    flex: 0 0 110px;
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    color: var(--primary-color);
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px 0;
+    box-sizing: border-box;
+    display: inline-flex;      
+    align-items: center;       
+    justify-content: center; 
+}
+#new-task-form button::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    filter: none;
+    background-image: url(Logo/plus-symbol-button.png);
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+#new-task-form button:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* --- TASK DETAILS FORM --- */
+#task-details-form {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 10px;
+    gap: 10px;
+    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px 15px 15px 15px; 
+}
+
+#task-details-form input#title {
+    flex-grow: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color); 
+    box-sizing: border-box;
+    font-size: 1.2rem;
+    padding: 10px 12px;
+    min-height: 40px;
+}
+.title-label {
+    display: flex;
+    align-items: center;      
+    gap: 10px;                
+    margin-bottom: 16px;
+}
+
+.title-required {
+    color: var(--high-priority-color); 
+    font-size: 2rem;
+    font-weight: bold;
+    margin-right: 5px;
+    line-height: 1;
+}
+
+/* Category Label/Select */
+label[for="category"] {
+    display: flex;
+    align-items: center;        
+    font-size: 20px;            
+    font-weight: bold;
+}
+
+label[for="category"]::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('Logo/category.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 11px;
+}
+
+label[for="category"] select {
+    font-size: 15px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color);
+    box-sizing: border-box;
+    height: 4vh;
+    margin-left: 2vh;
+    line-height: 1.1;
+    vertical-align: middle;
+    background: #fff;
+    width: vh;
+}
+
+
+/* Due Date Label/Input */
+label[for="due-date"] {
+    display: flex;
+    align-items: center;         
+    font-size: 20px;
+    font-weight: bold;           
+}
+
+label[for="due-date"]::before {
+    content: "";
+    display: inline-block;
+    width: 25px;                 
+    height: 25px;
+    background-image: url('Logo/calendar\ \(1\).png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 6px;
+}
+
+label[for="due-date"] input {
+    font-size: 15px;
+    border-radius: 5px;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    box-sizing: border-box;
+    height: 4vh;
+    margin-left: 2vh;
+    line-height: 1.1;
+    vertical-align: middle;
+    background: #fff;
+    width: vh;
+}
+
+/* Priority Section */
+label[for="priority"] {
+    display: flex;
+    align-items: center;         
+    font-size: 20px;
+    font-weight: bold;
+}
+
+label[for="priority"]::before {
+    content: "";
+    display: inline-block;
+    width: 25px;                 
+    height: 25px;
+    background-image: url('Logo/danger.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 6px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    border: none;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-right: 0px; 
+}
+
+.form-group input[type="radio"] {
+    display: none; 
+}
+
+/* Style label as radio button */
+.form-group label {
+    border: 2px solid #666;
+    border-radius: 5px; 
+    padding: 8px 18px; 
+    font-weight: bold;
+    margin-right: 10px;
+    background: #fff;
+    transition: all 0.2s;
+}
+
+/* Set initial button colors */
+.form-group label:first-of-type {
+    border-color: var(--high-priority-color);
+    color: var(--high-priority-color);
+}
+.form-group label:nth-of-type(2) {
+    border-color: var(--medium-priority-color);
+    color: var(--medium-priority-color);
+}
+.form-group label:nth-of-type(3) {
+    border-color: var(--low-priority-color);
+    color: var(--low-priority-color);
+}
+.form-group label:nth-of-type(4) {
+    border-color: var(--border-color);
+    color: var(--primary-text-color);
+}
+
+/* When checked/focus, apply background color */
+.form-group input[type="radio"]:checked + span,
+.form-group input[type="radio"]:focus + span {
+    background-color: transparent;
+    border-width: 2px;
+}
+.form-group label:first-of-type input[type="radio"]:checked + span {
+    background-color: var(--high-priority-color);
+    color: #fff;
+}
+.form-group label:nth-of-type(2) input[type="radio"]:checked + span {
+    background-color: var(--medium-priority-color);
+    color: #fff;
+}
+.form-group label:nth-of-type(3) input[type="radio"]:checked + span {
+    background-color: var(--low-priority-color);
+    color: #fff;
+}
+.form-group label:nth-of-type(4) input[type="radio"]:checked + span {
+    background-color: var(--primary-text-color);
+    color: #fff;
+}
+
+/* Hover States (make them match checked state) */
+.form-group label:nth-of-type(1):hover {
+    background-color: var(--high-priority-color); 
+    color: #fff;                 
+    border-color: var(--high-priority-color);
+}
+
+.form-group label:nth-of-type(2):hover {
+    background-color: var(--medium-priority-color);
+    color: #fff;
+    border-color: var(--medium-priority-color);
+}
+
+.form-group label:nth-of-type(3):hover {
+    background-color: var(--low-priority-color);
+    color: #fff;
+    border-color: var(--low-priority-color);
+}
+
+.form-group label:nth-of-type(4):hover {
+    background-color: var(--primary-text-color);
+    color: #fff;
+    border-color: var(--primary-text-color);
+}
+
+
+/* Notes Section */
+label[for="notes"] {
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+
+}
+
+label[for="notes"] textarea {
+    width: 66vh; 
+    height: 10vh; 
+    font-size: 14px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color);
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 10vh;
+    max-height: 250px;
+}
+
+/* Subtasks Section */
+label[for="subtasks"] {
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+}
+
+label[for="subtasks"] ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0; 
+}
+
+/* Style for the new subtask input row */
+#subtask-list li:last-child {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+#subtask-list li:last-child input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color); 
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#subtask-list li:last-child button {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+}
+#subtask-list li:last-child button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+#subtask-list li:last-child button::before {
+    content: "+"; 
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+
+/* Existing subtask list items */
+#subtask-list li {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    margin-bottom: 5px;
+    border: none;
+}
+#subtask-list li input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+#subtask-list li span {
+    flex-grow: 1;
+}
+
+/* --- BOTTOM BUTTONS (Delete, Close, Save) --- */
+.button-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 5px;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color); 
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+.button-row button {
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid #891d22; 
+    padding: 8px 20px;
+    background: #fff;
+    color: #891d22;
+    cursor: pointer;
+    transition: background 0.16s, color 0.16s, border 0.16s;
+    margin-right: 12px;
+    display: inline-flex; 
+    align-items: center;
+}
+
+#delete-task {
+    border-color: var(--high-priority-color);
+    color: var(--high-priority-color);
+    height: 44px;
+}
+#delete-task::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background-size: contain;
+    background-image: url(Logo/delete.png);
+    vertical-align: middle;
+    margin-bottom: 0px; 
+    margin-right: 6px;
+}
+
+#delete-task:hover {
+    background: var(--high-priority-color);
+    color: #fff;
+}
+
+/* Close & Save container div */
+.button-row > div {
+    display: flex;
+    gap: 15px; 
+}
+
+#close-details, #save-task {
+    border-color: var(--primary-text-color);
+    color: var(--primary-text-color);
+    margin-right: 0;
+}
+
+#close-details::before, #save-task::before {
+    content: "";
+    display: inline-block;
+    background-size: contain;
+    vertical-align: middle;
+    margin-bottom: 0px; 
+    margin-right: 6px;
+}
+#close-details::before {
+    background-image: url(Logo/close.png);
+    width: 18px;
+    height: 18px;
+}
+#save-task::before {
+    content: "+"; 
+    font-size: 1.4em;
+    font-weight: bold;
+    width: auto;
+    height: auto;
+    background-image: none;
+    margin-bottom: 0;
+}
+
+/* Close Button Hover */
+#close-details:hover {
+    background: var(--primary-text-color);
+    color: #fff;
+    border-color: var(--primary-text-color);
+}
+
+/* Save/Add Button Styling */
+#save-task {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: #fff;
+    margin-right: 0px;
+}
+
+#save-task:hover {
+    background: #e68a00; 
+    color: #fff;
+    border-color: #e68a00;
+}
+
+/* --- ARCHIVE PAGE --- */
+#archive-page {
+    height: 85vh;
+    display: flex;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+    flex-direction: column;
+}
+
+#archive-page details {
+
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+#archive-page summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#archive-page summary button {
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    margin-left: auto;
+    display: inline-flex;
+}
+
+#archive-page summary button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#archive-page li {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-color);
+    gap: 15px;
+}
+
+#archive-page li:last-of-type {
+    border-bottom: none;
+}
+
+#archive-page li input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#archive-page li button {
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+#archive-page li button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* --- SETTINGS PAGE --- */
+#settings-page {
+    height: 85vh;
+    display: flex;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+}
+
+#setting-left-pane {
+    padding: 20px 10px;
+    gap: 10px;
+    flex: 0 0 20%;
+    border: none;
+    border-right: 1px solid var(--border-color);
+}
+
+#setting-left-pane label {
+    display: block;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#setting-left-pane input[type="radio"] {
+    display: none;
+}
+
+#setting-left-pane input[type="radio"]:checked + label {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#settings-page section.pane {
+    padding: 20px;
+    border: none;
+    flex: 0 0 73%;
+    margin-right: 30px;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    gap: 10px;
+}
+
+.switch input[type="checkbox"] {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+}
+
+#themes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.theme {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: #e9e9e9;
+    cursor: pointer;
+}
+
