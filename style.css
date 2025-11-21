@@ -14,6 +14,8 @@
     --theme-2: #43a047;
     --theme-3: #1e88e5;
     --theme-4: #cd12a8ff;
+    --theme-color-blind: #000000;
+    --theme-monochrome: #202020;
     --page-max-width: 1500px;
     --form-field-separator: 20px;
 }
@@ -900,9 +902,15 @@ label[for="subtasks"] ul {
     cursor: pointer;
 }
 
-#setting-left-pane label:hover {
+#setting-left-pane label:hover,
+#settings-appearance{
     background-color: var(--primary-color);
     color: white; 
+}
+
+#settings-appearance{
+    border-color: var(--primary-text-color) ;
+    border-style: solid;
 }
 
 #setting-left-pane label:not(:last-child) {
@@ -1031,6 +1039,23 @@ label[for="subtasks"] ul {
     color: white;
 }
 
+#theme-color-blind {
+    border: 2px solid var(--theme-color-blind);
+}
+
+#theme-color-blind:hover {
+    background-color: var(--theme-color-blind);
+    color: white;
+}
+
+#theme-monochrome {
+    border: 2px solid var(--theme-monochrome);
+}
+
+#theme-monochrome:hover {
+    background-color: var(--theme-monochrome);
+    color: white;
+}
 
 .popup-overlay {
     position: fixed;

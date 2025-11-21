@@ -84,30 +84,42 @@ const popupClose = document.getElementById('popup-close');
 
 // Add these variables to your script.js
 const THEMES = {
-    'theme-1': {
-        primary: '#ff9f1a', // Orange (Default)
-        high: '#c62828',
-        medium: '#d9812e',
-        low: '#258725',
-    },
-    'theme-2': {
-        primary: '#43a047', // Green
-        high: '#c62828',
-        medium: '#fb8c00',
-        low: '#1b5e20',
-    },
-    'theme-3': {
-        primary: '#1e88e5', // Blue
-        high: '#e53935',
-        medium: '#ffb300',
-        low: '#388e3c',
-    },
-    'theme-4': {
-        primary: '#cd12a8ff', // Purple
-        high: '#c62828',
-        medium: '#ff8f00',
-        low: '#558b2f',
-    }
+	'theme-1': {
+		primary: '#ff9f1a', // Orange (Default)
+		high: '#c62828',
+		medium: '#d9812e',
+		low: '#258725',
+	},
+	'theme-2': {
+		primary: '#43a047', // Green
+		high: '#c62828',
+		medium: '#fb8c00',
+		low: '#1b5e20',
+	},
+	'theme-3': {
+		primary: '#1e88e5', // Blue
+		high: '#e53935',
+		medium: '#ffb300',
+		low: '#388e3c',
+	},
+	'theme-4': {
+		primary: '#cd12a8ff', // Purple
+		high: '#c62828',
+		medium: '#ff8f00',
+		low: '#558b2f',
+	},
+	'theme-color-blind': {
+		primary: '#000000',
+		high: '#ec0258',
+		medium: '#FB9A08',
+		low: '#025dad',
+	},
+	'theme-monochrome': {
+		primary: '#202020',
+		high: '#202020',
+		medium: '#202020',
+		low: '#202020',
+	},
 };
 
 popupSave.addEventListener('click', () => {
