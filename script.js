@@ -46,6 +46,15 @@ settingsButton.addEventListener('click', (e) => {
 	setActivePage(PAGES.settings);
 });
 
+const themesDiv = document.getElementById('themes');
+
+themesDiv.addEventListener('click', (e) => {
+    let targetDiv = e.target.closest('.theme');
+    if (targetDiv) {
+        applyTheme(targetDiv.id);
+    }
+});
+
 const taskButton = document.getElementById('tasks-button');
 taskButton.addEventListener('click', (e) => {
 	setActivePage(PAGES.home);
@@ -72,6 +81,34 @@ const popupInput = document.getElementById('popup-input');
 const popupTitle = document.getElementById('popup-title');
 const popupSave = document.getElementById('popup-save');
 const popupClose = document.getElementById('popup-close');
+
+// Add these variables to your script.js
+const THEMES = {
+    'theme-1': {
+        primary: '#ff9f1a', // Orange (Default)
+        high: '#c62828',
+        medium: '#d9812e',
+        low: '#258725',
+    },
+    'theme-2': {
+        primary: '#43a047', // Green
+        high: '#c62828',
+        medium: '#fb8c00',
+        low: '#1b5e20',
+    },
+    'theme-3': {
+        primary: '#1e88e5', // Blue
+        high: '#e53935',
+        medium: '#ffb300',
+        low: '#388e3c',
+    },
+    'theme-4': {
+        primary: '#cd12a8ff', // Purple
+        high: '#c62828',
+        medium: '#ff8f00',
+        low: '#558b2f',
+    }
+};
 
 popupSave.addEventListener('click', () => {
 	if (popupSaveCallback) popupSaveCallback(popupInput.value);
@@ -767,7 +804,34 @@ function handleTaskCompletedForReward() {
 	}
 }
 
+// Function to apply a selected theme
+function applyTheme(themeName) {
+    const theme = THEMES[themeName];
+    if (!theme) return;
+
+    // Get the :root element style sheet
+    const root = document.documentElement.style;
+
+    // 1. FIX: Remove 'selected' class from ALL theme boxes
+    document.querySelectorAll('.theme').forEach(div => {
+        div.classList.remove('selected');
+    });
+
+    // 2. Apply main colors (unchanged)
+    root.setProperty('--primary-color', theme.primary);
+    root.setProperty('--border-color', theme.primary); // Border usually matches primary
+
+    // 3. Apply priority colors (unchanged)
+    root.setProperty('--high-priority-color', theme.high);
+    root.setProperty('--medium-priority-color', theme.medium);
+    root.setProperty('--low-priority-color', theme.low);
+    
+    // 4. Apply 'selected' class to the CURRENT theme box
+    document.getElementById(themeName).classList.add('selected');
+}
+
 function main() {
+	applyTheme('theme-1');
 	setActivePage(PAGES.home);
 	refreshTaskListPane();
 	refreshArchiveCompletedPane();

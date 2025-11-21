@@ -1,5 +1,5 @@
 /* constant for colour*/
-:root{ 
+:root {
     /* Define the variable with two hyphens: --variable-name */
     --primary-color: #ff9f1a;
     /* Define colors that resemble the PDF prototype for a clean, professional look */
@@ -9,6 +9,11 @@
     --high-priority-color: #891d22; /* Reddish */
     --medium-priority-color: #d9812e; /* Orange/Brown */
     --low-priority-color: #258725; /* Green */
+    --close-butoon-hover: #444444; /* Dark gray for close button hover */
+    --theme-1: #ff9f1a;
+    --theme-2: #43a047;
+    --theme-3: #1e88e5;
+    --theme-4: #cd12a8ff;
 }
 
 
@@ -113,7 +118,6 @@ nav button::before {
     border: none; 
     height: 100%;
     min-height: 0;
-
 }
 /* Vertical divider between the two columns */
 #tasks-list-pane {
@@ -370,9 +374,8 @@ nav button::before {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative;
-    flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto; 
+    /* Add bottom padding to create clearance for the fixed button-row (~74px height). */
     padding: 10px 15px 15px 15px; 
 }
 
@@ -755,20 +758,24 @@ label[for="subtasks"] ul {
     height: 18px;
 }
 #save-task::before {
-    content: "+"; 
-    font-size: 1.4em;
-    font-weight: bold;
-    width: auto;
-    height: auto;
-    background-image: none;
-    margin-bottom: 0;
+    background-image: url(Logo/diskette.png);
+    width: 20px;
+    height: 20px;
+}
+
+#save-task::before {
+    filter: brightness(0) invert(1);
+}
+
+#close-details:hover::before {
+    filter: brightness(0) invert(1);
 }
 
 /* Close Button Hover */
 #close-details:hover {
-    background: var(--primary-text-color);
+    background: var(--close-butoon-hover);
     color: #fff;
-    border-color: var(--primary-text-color);
+    border-color: var(--close-butoon-hover);
 }
 
 /* Save/Add Button Styling */
@@ -780,9 +787,10 @@ label[for="subtasks"] ul {
 }
 
 #save-task:hover {
-    background: #e68a00; 
+    background: var(--primary-color); 
+    filter: brightness(0.85);
     color: #fff;
-    border-color: #e68a00;
+    border-color: var(--primary-color);
 }
 
 /* --- ARCHIVE PAGE --- */
@@ -835,12 +843,10 @@ label[for="subtasks"] ul {
     align-items: center;
     justify-content: flex-start;
     padding: 8px 0;
-    border-bottom: 1px dashed var(--border-color);
     gap: 15px;
 }
 
 #archive-page li:last-of-type {
-    border-bottom: none;
 }
 
 #archive-page li input[type="checkbox"] {
@@ -959,6 +965,7 @@ label[for="subtasks"] ul {
     padding-top: 10px;
 }
 
+
 .theme {
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -967,9 +974,58 @@ label[for="subtasks"] ul {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    background-color: #e9e9e9;
     cursor: pointer;
 }
+
+/* --- THEME SELECTION VISUAL STATE --- */
+.theme.selected {
+    /* Highlight the currently selected theme box */
+    border: 4px solid var(--primary-color) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.theme:hover {
+    background-color: var(--primary-color); /* Orange from your theme data */
+    color: white;
+}
+#theme-1 {
+    border: 2px solid var(--theme-1);
+}
+
+#theme-1:hover {
+    background-color: var(--theme-1); /* Green from your theme data */
+    color: white;
+}
+
+#theme-2 {
+    border: 2px solid var(--theme-2);
+}
+
+#theme-2:hover {
+    background-color: var(--theme-2); /* Green from your theme data */
+    color: white;
+}
+
+#theme-3 {
+    border: 2px solid var(--theme-3);
+}
+
+/* Theme 3 (Blue) Hover */
+#theme-3:hover {
+    background-color: var(--theme-3); /* Blue from your theme data */
+    color: white;
+}
+#theme-4 {
+    border: 2px solid var(--theme-4);
+}
+
+/* Theme 4 (Purple) Hover */
+#theme-4:hover {
+    background-color: var(--theme-4); /* Purple from your theme data */
+    color: white;
+}
+
 
 .popup-overlay {
     position: fixed;
