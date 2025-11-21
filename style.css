@@ -15,6 +15,7 @@
     --theme-3: #1e88e5;
     --theme-4: #cd12a8ff;
     --page-max-width: 1500px;
+    --form-field-separator: 20px;
 }
 
 
@@ -377,7 +378,7 @@ nav button::before {
     gap: 10px;
     overflow-y: auto; 
     /* Add bottom padding to create clearance for the fixed button-row (~74px height). */
-    padding: 10px 15px 15px 15px; 
+    padding: 10px 50px;
 }
 
 #task-details-form input#title {
@@ -596,10 +597,11 @@ label[for="notes"] {
     /* FIX: Remove flex-grow so Notes only takes its content height. */
     flex-grow: 0; 
     padding-bottom: 0;
+    margin-top:var(--form-field-separator);
 }
 
 label[for="notes"] textarea {
-    width: 66vh; 
+    width: 100%;
     height: 10vh; 
     font-size: 14px;
     border-radius: 5px;
@@ -615,6 +617,8 @@ label[for="subtasks"] {
     font-size: 20px;
     font-weight: bold;
     display: block;
+    margin-top:var(--form-field-separator);
+    width: 100%
 }
 
 label[for="subtasks"] ul {
@@ -632,6 +636,7 @@ label[for="subtasks"] ul {
     align-items: center;
     padding: 0;
     margin-bottom: 0;
+    width: 100%;
 }
 
 #subtask-list li:last-child input[type="text"] {
@@ -642,13 +647,14 @@ label[for="subtasks"] ul {
     border: 2px solid var(--border-color); 
     min-width: 0;
     box-sizing: border-box;
+    width: 100%;
 }
 
 #subtask-list li:last-child button {
     flex-shrink: 0;
     padding: 8px 18px;
     font-size: 15px;
-    margin-right: 20vh;
+    margin-right: 0;
     font-weight: bold;
     border-radius: 5px;
     background-color: #fff;
