@@ -832,7 +832,7 @@ function handleTaskCompletedForReward() {
 
 		// Show success popup!
 		openInfoPopup(
-			`HURRRAY! You grew a tree! You are now at stage ${currentTreeStage}!`
+			`HURRRAY! The tree grew bigger! You are now at stage ${currentTreeStage}!`
 		);
 
 		// Reset for next stage
