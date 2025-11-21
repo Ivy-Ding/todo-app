@@ -250,7 +250,7 @@ let taskList = [
 		null,
 		'2025-12-20',
 		PRIORITIES.low,
-		'nothing other than task title is mandatory!'
+		'Your deleted and completed tasks are in "Archive"!'
 	),
 	new Task(
 		'tasks past due date still count as "due in 3 days"',
@@ -461,7 +461,9 @@ function refreshArchiveCompletedPane() {
 
 			// Clicking this button shows a "Not functional" popup
 			delBtn.addEventListener('click', () => {
-				openInfoPopup('This feature is not functional right now.');
+				task.dateDeleted = Date.now();
+				refreshArchiveDeletedPane();
+				refreshArchiveCompletedPane();
 			});
 
 			li.appendChild(delBtn);
@@ -496,6 +498,9 @@ function refreshArchiveDeletedPane() {
 			btn.textContent = 'Undelete';
 
 			btn.addEventListener('click', () => {
+				showToast(
+					'Tip: Your undeleted and incomplete tasks go to Tasks pane...'
+				);
 				task.dateDeleted = null;
 
 				// checkbox state decides where the task goes
