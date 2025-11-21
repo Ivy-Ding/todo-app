@@ -1381,3 +1381,25 @@ label[for="subtasks"] ul {
     background: rgba(255, 255, 255, 0.6);
     color: var(--primary-text-color);
 }
+
+.top {
+    max-width: var(--page-max-width);
+    margin: auto;
+}
+
+.top h1 {
+    margin-bottom: 5px;
+}
+
+#topbar-right button {
+    background: none;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#topbar-right button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
