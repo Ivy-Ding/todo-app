@@ -134,8 +134,23 @@ categorySelect.addEventListener('click', function () {
 	if (this.value === 'add-new') {
 		openPopup('Add New Category', '', (newCat) => {
 			newCat = newCat.trim();
-			if (newCat !== '') {
+			if (
+				newCat !== '' &&
+				!categoriesList.includes(newCat) &&
+				newCat != 'add-new'
+			) {
 				handleAddNewCategoryOnClick(newCat);
+			} else {
+				if (newCat == 'add-new') {
+					popupInput.setCustomValidity(
+						'due to technical constraints, category name cannot be "add-new"'
+					);
+				} else {
+					popupInput.setCustomValidity(
+						'category name cannot be empty or be a duplicate of an existing category'
+					);
+					popupInput.reportValidity();
+				}
 			}
 		});
 	}
@@ -691,8 +706,10 @@ function closePopup() {
 }
 
 function savePopup() {
-	popupOverlay.style.display = 'none';
-	popupSaveCallback = null;
+	if (popupInput.checkValidity()) {
+		popupOverlay.style.display = 'none';
+		popupSaveCallback = null;
+	}
 }
 
 function renderSubtask(subtask) {

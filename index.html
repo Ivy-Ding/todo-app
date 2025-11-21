@@ -292,7 +292,11 @@
 			<div class="popup-box">
 				<h3 id="popup-title">Popup</h3>
 
-				<input id="popup-input" type="text" placeholder="Enter name..." />
+				<input id="popup-input" 
+					aria-label="enter category name" 
+					type="text" 
+					placeholder="Enter name..." 
+					oninput="this.setCustomValidity('')"/>
 
 				<div class="popup-buttons">
 					<button id="popup-close">Close</button>

@@ -1245,3 +1245,8 @@ label[for="subtasks"] ul {
     text-align: center;
     align-items: center;
 }
+
+#popup-save{
+    background-color: var(--primary-color);
+    color: white;
+}
