@@ -60,13 +60,117 @@ const newTaskForm = document.getElementById('new-task-form');
 const taskDetailForm = document.getElementById('task-details-form');
 const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
+const categorySelect = document.getElementById('category');
 
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
-closeDetailsButton.addEventListener('click', (e) => {
-	setActivePage(PAGES.home);
+//POPUP MODAL
+const popupOverlay = document.getElementById('popup-overlay');
+const popupInput = document.getElementById('popup-input');
+const popupTitle = document.getElementById('popup-title');
+const popupSave = document.getElementById('popup-save');
+const popupClose = document.getElementById('popup-close');
+
+popupSave.addEventListener('click', () => {
+	if (popupSaveCallback) popupSaveCallback(popupInput.value);
+	savePopup();
 });
+
+popupClose.addEventListener('click', closePopup);
+
+categorySelect.addEventListener("click", function () {
+    if (this.value === "add-new") {
+        openPopup("Add New Category", "", (newCat) => {
+            newCat = newCat.trim();
+            if (newCat !== "") {
+                handleAddNewCategoryOnClick(newCat);
+            }
+        });
+    }
+});
+
+const newSubtaskInput = document.getElementById("new-subtask-input");
+const newSubtaskButton = document.getElementById("new-subtask-button");
+const subtaskListUI = document.getElementById("subtask-list");
+
+newSubtaskButton.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (!taskBeingEdited) {
+        alert("Select a task to add subtasks to.");
+        return;
+    }
+
+    const title = newSubtaskInput.value.trim();
+    if (title === "") return;
+
+    const sub = new Subtask(title);
+    taskBeingEdited.subtasks.push(sub);
+
+    renderSubtask(sub);
+
+    newSubtaskInput.value = "";
+});
+
+
+
+closeDetailsButton.addEventListener('click', (e) => {
+	// Switch back to Home page
+	setActivePage(PAGES.home);
+
+	// Clear everything
+	clearTaskDetailsPanel();
+
+	// Exit editing mode
+	taskBeingEdited = null;
+});
+
+
+// Delete Popup Modal
+const deletePopupOverlay = document.getElementById("delete-popup-overlay");
+const deletePopupMessage = document.getElementById("delete-popup-message");
+const deletePopupCancel = document.getElementById("delete-popup-cancel");
+const deletePopupConfirm = document.getElementById("delete-popup-confirm");
+
+deletePopupCancel.addEventListener("click", closeDeletePopup);
+
+deletePopupConfirm.addEventListener("click", () => {
+    if (deleteCallback) deleteCallback();
+    closeDeletePopup();
+});
+
+deleteTaskButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (!taskBeingEdited) return;
+
+    const task = taskBeingEdited;
+
+    openDeletePopup(task, () => {
+        
+        task.dateDeleted = Date.now(); 
+
+        refreshTaskListPane();        
+
+        clearTaskDetailsPanel();      
+        taskBeingEdited = null;       
+
+        setActivePage(PAGES.home);    
+    });
+});
+
+// Priority active state styling
+document.querySelectorAll('.form-group input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        document.querySelectorAll('.form-group label').forEach(label => {
+            label.classList.remove('active');
+        });
+        radio.parentElement.classList.add('active');
+    });
+});
+
+
 
 //variables---------------------------------------------
 const PRIORITIES = {
@@ -78,6 +182,12 @@ const PRIORITIES = {
 
 let taskList = [new Task('sample task')];
 let categoriesList = [];
+
+let taskBeingEdited = null; 
+
+let popupSaveCallback = null;
+
+let deleteCallback = null;
 
 const PAGES = {
 	home: 'home',
@@ -116,6 +226,11 @@ function renderTaskToLi(task) {
 			task.dateCompleted = Date.now();
 			li.parentNode.removeChild(li);
 		}
+		// If user was editing this same task then clear detail panel when done as marked
+        if (taskBeingEdited === task) {
+            clearTaskDetailsPanel();
+            taskBeingEdited = null;
+        }
 	});
 
 	const editButton = document.createElement('button');
@@ -182,20 +297,109 @@ function handleAddTaskOnClick(e) {
 
 // push category name to categoriesList, then update the category DOM drodown
 // note: new category name cannot be "add-new", if it is then prompt user to rename and do not add to list
-function handleAddNewCategoryOnClick(categoryName) {}
+function handleAddNewCategoryOnClick(categoryName) {
+	categoryName = categoryName.trim();
+
+	// empty name check
+	if (categoryName.length === 0) {
+		alert("Category name cannot be empty.");
+		return;
+	}
+
+	// name cannot be "add-new" check
+	if (categoryName === "add-new" || categoryName === "+ Add New Category") {
+		alert('Please choose a different category name.');
+		return;
+	}
+
+	// prevent duplicates
+	if (categoriesList.includes(categoryName)) {
+		alert("Category already exists.");
+		return;
+	}
+
+	categoriesList.push(categoryName);
+
+    const opt = document.createElement("option");
+    opt.value = categoryName;
+    opt.textContent = categoryName;
+
+    categorySelect.appendChild(opt);
+
+    categorySelect.value = categoryName;
+}
 
 // pre-fill the task details form with info from the given task,
 // then set the task details form to show (ignore this for now as we aren't switching panes yet, so task details form is always showing lol)
 function handleEditOnClick(task) {
 	console.debug(`handleEditOnClick(${task.title})`);
+
 	//swap tabs
 	setActivePage(PAGES.details);
-	//todo: rest of the edit logic here...
+
+	//task being edited
+	taskBeingEdited = task;
+
+	// fill form fields
+	taskDetailForm.elements['title'].value = task.title || '';
+	taskDetailForm.elements['category'].value = task.category || 'default';
+	taskDetailForm.elements['due-date'].value = task.dueDate || '';
+	taskDetailForm.elements['notes'].value = task.notes || '';
+
+	// priority radio buttons fill
+	const radios = taskDetailForm.querySelectorAll('input[name="priority"]');
+
+	// if no priority exists use none
+	const priorityValue = task.priority != null ? Number(task.priority) : 0;
+
+	radios.forEach(r => {
+		r.checked = Number(r.value) === priorityValue;
+	});
+
+	// Update active visual state
+	document.querySelectorAll('.form-group label').forEach(label => label.classList.remove('active'));
+	const checkedRadio = taskDetailForm.querySelector('input[name="priority"]:checked');
+	if (checkedRadio) checkedRadio.parentElement.classList.add('active');
+
+
+	
+	subtaskListUI.querySelectorAll("li:not(:last-child)").forEach(li => li.remove());
+
+	// Render existing subtasks
+	task.subtasks.forEach(st => renderSubtask(st));
+	
 }
 
 // on submit update the task info and refresh the task list pane
-function handleEditTaskSaveOnClick(task) {
-	console.debug(`handleEditTaskSaveOnClick(${task.title})`);
+function handleEditTaskSaveOnClick(e) {
+	e.preventDefault(); 
+
+    if (!taskBeingEdited) return; 
+
+    console.debug(`Saving task: ${taskBeingEdited.title}`);
+
+    // Update the basic fields
+    taskBeingEdited.title = taskDetailForm.elements["title"].value.trim();
+    taskBeingEdited.category = taskDetailForm.elements["category"].value;
+    taskBeingEdited.dueDate = taskDetailForm.elements["due-date"].value;
+    taskBeingEdited.notes = taskDetailForm.elements["notes"].value.trim();
+
+    // Update PRIORITY
+    const selectedPriority = taskDetailForm.querySelector('input[name="priority"]:checked');
+    taskBeingEdited.priority = selectedPriority ? Number(selectedPriority.value) : 0;
+
+    // Refresh list UI
+    refreshTaskListPane();
+
+    console.debug("Task saved:", taskBeingEdited);
+
+	// Switch back to home page 
+	setActivePage(PAGES.home);
+
+	clearTaskDetailsPanel();
+
+    // Stop editing mode
+    taskBeingEdited = null;
 }
 
 // delete the task from task list, this is undoable in archive tab
@@ -208,6 +412,80 @@ function handleFilterOnClick() {}
 
 //show the sort dropdown then sort tasks and refresh task list pane
 function handleSortOnClick() {}
+
+
+//POPUP MODAL event handler methods------------------------------------------------
+function openPopup(title, defaultValue, onSave) {
+	popupTitle.textContent = title;
+	popupInput.value = defaultValue || "";
+	popupSaveCallback = onSave;
+	popupOverlay.style.display = "flex";
+	popupInput.focus();
+}
+
+function closePopup() {
+	popupOverlay.style.display = "none";
+	popupSaveCallback = null;
+
+	categorySelect.value = "default";
+}
+
+function savePopup() {
+	popupOverlay.style.display = "none";
+	popupSaveCallback = null;
+}
+
+
+function renderSubtask(subtask) {
+	const li = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    // Restore checkbox state if subtask was already completed
+    if (subtask.dateCompleted !== null) {
+        checkbox.checked = true;
+    }
+
+    checkbox.addEventListener("change", function () {
+        if (this.checked) {
+            // set if it wasn't completed before
+            if (subtask.dateCompleted === null) {
+                subtask.dateCompleted = Date.now();
+            }
+        } else {
+            subtask.dateCompleted = null; // unmark
+        }
+    });
+
+    const span = document.createElement("span");
+    span.textContent = subtask.title;
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+
+    // Insert before the last row (the input field)
+    const lastRow = subtaskListUI.lastElementChild;
+    subtaskListUI.insertBefore(li, lastRow);
+}
+
+function clearTaskDetailsPanel() {
+    // Clear main form
+    taskDetailForm.reset();
+
+    // Reset category dropdown
+    taskDetailForm.elements["category"].value = "default";
+
+    // Reset priority None
+    const nonePriority = taskDetailForm.querySelector(
+        'input[name="priority"][value="0"]'
+    );
+    if (nonePriority) nonePriority.checked = true;
+
+    // Clear all subtasks except input row
+    const subtaskItems = subtaskListUI.querySelectorAll("li:not(:last-child)");
+    subtaskItems.forEach(li => li.remove());
+}
 
 // Tab Switch ---------------------------------------------------------------
 function hideElement(element) {
@@ -277,6 +555,18 @@ function setActivePage(newPage) {
 			console.error(`Unknown page encountered: ${newPage}`);
 	}
 }
+
+function openDeletePopup(task, callback) {
+    deletePopupMessage.textContent = `Are you sure you want to delete "${task.title}"?`;
+    deleteCallback = callback;
+    deletePopupOverlay.style.display = "flex";
+}
+
+function closeDeletePopup() {
+    deletePopupOverlay.style.display = "none";
+    deleteCallback = null;
+}
+
 
 function main() {
 	setActivePage(PAGES.home)
