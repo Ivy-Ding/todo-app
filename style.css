@@ -1,9 +1,23 @@
+/* constant for colour*/
+:root {
+    /* Define the variable with two hyphens: --variable-name */
+    --primary-color: #ff9f1a;
+    /* Define colors that resemble the PDF prototype for a clean, professional look */
+    --primary-text-color: #222;
+    --secondary-background: #fff;
+    --border-color: #ff9f1a;
+    --high-priority-color: #891d22; /* Reddish */
+    --medium-priority-color: #d9812e; /* Orange/Brown */
+    --low-priority-color: #258725; /* Green */
+}
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f6fa;
     margin: 0;
     padding: 20px;
-    color: #222;
+    color: var(--primary-text-color);
 }
 
 body h1 {
@@ -11,20 +25,21 @@ body h1 {
     margin-bottom: 10px;
 }
 
-
+/* --- NAVIGATION BAR --- */
 nav {
     display: flex;
     flex-direction: row;
+    /* ALIGNMENT FIX: Set max-width and center to align with the .page container */
+    max-width: 1000px; /* Match .page max-width */
+    border: none;
     padding-top: 20px;
-    margin: 0 auto;           /* center the nav like the page */
-    justify-content: left;
-    max-width: 780px;         /* match your page/pane max-width */
-    width: 100%;
-    box-sizing: border-box;
+    margin: 0 auto; /* Center the navigation bar */
+    /* Ensure the buttons start from the left of the centered nav container */
+    justify-content: flex-start;
 }
 
 nav button {
-    flex: 1;
+    flex: 0 0 auto;
     padding: 10px;
     border: none;
     background-color: #fff;
@@ -35,15 +50,24 @@ nav button {
     align-items: center;
     display: inline-flex;
     gap: 8px;
-    border: 2px solid #ff9f1a;
+    /* Adjusted: Remove the border to match the clean prototype tabs */
+    border: 1px solid var(--primary-color);
+    border-bottom: 3px solid transparent; /* For active/focus indication */
 }
 
 nav button:hover,
 nav button.active,
 nav button:focus {
-    background-color: #ff9f1a;
+    /* Only apply border to bottom for selected/active tab */
+    background-color: var(--secondary-background); /* Keep background white */
+    border-bottom: 3px solid var(--primary-color);
     font-weight: bold;
     outline: none;
+    /* Remove background change to match prototype's clean tab look */
+}
+
+nav button.active {
+    color: var(--primary-color);
 }
 
 nav button::before {
@@ -67,37 +91,117 @@ nav button::before {
     background-image: url(Logo/settings.png);
 }
 
+/* --- MAIN PAGE LAYOUT (Tasks Page) --- */
 .page {
-    height: 650px; /* total container height */
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
+    height: 85vh; /* total container height */
+    /* *** MODIFIED FOR 2 COLUMNS *** */
+    /* Layout: TaskList (240px) | TaskDetails (1fr) */
+    grid-template-columns: 1fr 2fr; 
+    display: grid;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+    border: 1px solid var(--primary-color);
 }
+/* #tasks-page.details-only selector is no longer needed as the main grid is 2 columns */
+
 
 .page .pane {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    border: 1px solid #ff9f1a;
+    border: none; 
     height: 100%;
     min-height: 0;
-    max-width: 780px;
 }
-
-.page .pane:first-child {
-    flex: 0 0 30%;
+/* Vertical divider between the two columns */
+#tasks-list-pane {
     border-radius: 0 0 0 5px;
+    border-right: 1px solid var(--primary-color);
 }
 
-.page .pane:last-child {
-    flex: 0 0 70%;
+#task-details-pane {
+    flex: 0 0 66%;
     border-radius: 0 0 5px 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
+#task-details-pane h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 1px;
+}
+
+#home-side-pane {
+    flex: 0 0 66%;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+#task-rewards-pane,
+#task-status-pane {
+    flex: 1;
+    border: none; 
+    border-radius: 0;
+    padding: 10px;
+}
+#task-rewards-pane {
+    border-bottom: 1px solid var(--border-color);
+}
+
+
+/* --- CSS for Side-by-Side Status Lists --- */
+#task-status-pane .body {
+    display: flex;
+    flex-direction: row; 
+    padding: 15px 10px; 
+    gap: 20px; 
+}
+
+#task-status-pane .body > div {
+    flex: 1; 
+    padding: 0 10px; 
+    min-width: 0; 
+}
+
+#task-status-pane h3 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-bottom: 2px solid var(--border-color); 
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#task-status-pane .body ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#task-status-pane .body li {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 3px 0;
+    border: none; 
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+#task-status-pane span {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* --- PANE HEADER --- */
 .page .pane .header {
     display: flex;
     background-color: #fff;
-    border-bottom: 2px solid #ff9f1a;
+    border-bottom: 1px solid var(--border-color);
     padding: 8px;
     font-weight: bold;
     justify-content: center;
@@ -105,8 +209,13 @@ nav button::before {
 }
 
 .page .pane .header h2 {
-    font-size: 30px;
+    font-size: 20px; 
     margin: 0 auto;
+}
+
+.page .pane .header .right {
+    display: inline-flex;
+    gap: 5px;
 }
 
 .page .pane .header button {
@@ -114,9 +223,9 @@ nav button::before {
     padding: 6px 12px;
     font-size: 14px;
     border-radius: 5px;
-    background-color: #ff9f1a;
-    color: white;
-    border: 2px solid #ff9f1a;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
     cursor: pointer;
     margin-left: auto;
     display: inline-flex;
@@ -124,7 +233,8 @@ nav button::before {
 }
 
 .page .pane .header button:hover {
-    background-color: #4d3b00;
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .page .pane .header .right button::before {
@@ -133,18 +243,18 @@ nav button::before {
     width: 15px;
     height: 15px;
     background-size: contain;
+    filter: none; 
 }
 
 .right button[aria-label="filter"]::before {
-    filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg);
     background-image: url(Logo/filter.png);
 }
 
 .right button[aria-label="sort"]::before {
-    filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg);
     background-image: url(Logo/sort.png);
 }
 
+/* --- PANE BODY (Task List) --- */
 .page .pane .body {
     flex: 1;
     display: flex;
@@ -166,34 +276,36 @@ nav button::before {
     color: black;
     display: flex;
     margin-bottom: 10px;
-    border: 2px solid #ff9f1a;
+    border: 1px solid var(--border-color); 
     border-radius: 10px;
-    gap: 10px
+    gap: 10px;
+    background-color: #fff; 
 }
 
 .page .pane .body li:nth-child(odd) {
-    background-color: #f0f0f0;
+    background-color: #fff; 
 }
 
 .page .pane .body li button {
     font-size: 14px;
     border-radius: 5px;
-    background-color: #ff9f1a;
-    color: white;
-    border: 2px solid #ff9f1a;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
     cursor: pointer;
     margin-left: auto;
     display: inline-flex;
     gap: 5px;
 }
 
+/* --- QUICK ADD FORM --- */
 #task-list-container {
     flex-grow: 1;
     overflow-y: auto;
     max-height: 600px;
-    border: 1px solid #ccc;
+    border: none;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 0 0 10px 0;
 }
 
 #new-task-form {
@@ -202,7 +314,7 @@ nav button::before {
     margin-top: 10px;
     flex-shrink: 0;
     width: 100%;
-    max-width: 780px;
+    max-width: none;
     box-sizing: border-box;
 }
 
@@ -211,24 +323,24 @@ nav button::before {
     padding: 10px 14px;
     font-size: 16px;
     border-radius: 5px;
-    border: 2px solid #ff9f1a;
+    border: 2px solid var(--border-color); 
     min-width: 0;
     box-sizing: border-box;
 }
 
 #new-task-form button {
     flex: 0 0 110px;
-    background-color: #ff9f1a;
-    border: 2px solid #ff9f1a;
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
     border-radius: 5px;
-    color: white;
+    color: var(--primary-color);
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
     padding: 10px 0;
     box-sizing: border-box;
-    display: inline-flex;      /* Align icon and text horizontally */
-    align-items: center;       /* Vertically center items */
+    display: inline-flex;      
+    align-items: center;       
     justify-content: center; 
 }
 #new-task-form button::before {
@@ -237,25 +349,29 @@ nav button::before {
     width: 18px;
     height: 18px;
     background-size: contain;
-    filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg);
+    filter: none;
     background-image: url(Logo/plus-symbol-button.png);
     vertical-align: middle;
     margin-right: 5px;
 }
 
 #new-task-form button:hover {
-    background-color: #4d3b00;
-    border-color: #e68a00;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
 }
 
+/* --- TASK DETAILS FORM --- */
 #task-details-form {
-    display: flex;
-    flex-direction: column;
-    padding: 4px 10px;
-    gap: 10px;
+    /* Set position relative for button anchor. Remove scroll from here. */
     position: relative;
     flex-grow: 1;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: hidden; 
+    /* Add bottom padding to create clearance for the fixed button-row (~74px height). */
+    padding: 10px 15px 74px 15px; 
 }
 
 #task-details-form input#title {
@@ -263,109 +379,107 @@ nav button::before {
     padding: 8px 12px;
     font-size: 14px;
     border-radius: 5px;
-    border: 2px solid #ff9f1a;
+    border: 2px solid var(--border-color); 
     box-sizing: border-box;
+    font-size: 1.2rem;
+    padding: 10px 12px;
+    min-height: 40px;
 }
 .title-label {
     display: flex;
-    align-items: center;      /* vertical alignment */
-    gap: 10px;                /* spacing between asterisk and input */
+    align-items: center;      
+    gap: 10px;                
     margin-bottom: 16px;
 }
 
 .title-required {
-    color: #b80000;
+    color: var(--high-priority-color); 
     font-size: 2rem;
     font-weight: bold;
     margin-right: 5px;
     line-height: 1;
 }
 
+/* Category Label/Select */
 label[for="category"] {
     display: flex;
-    align-items: center;        /* vert align everything */
-    font-size: 22px;            /* visually matches the label */
+    align-items: center;        
+    font-size: 20px;            
     font-weight: bold;
-    gap: 12px;                  /* space between icon and label/select */
-    margin-bottom: 18px;
 }
 
-/* Use a larger, square icon to match text and select */
 label[for="category"]::before {
     content: "";
     display: inline-block;
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     background-image: url('Logo/category.png');
     background-size: contain;
     background-repeat: no-repeat;
-    margin-right: 6px;
+    margin-right: 11px;
 }
 
-/* Style the SELECT so it's tall and matches the label baseline */
 label[for="category"] select {
-    font-size: 20px;
+    font-size: 15px;
     border-radius: 5px;
-    padding: 6px 18px;           /* vertical + horizontal padding */
-    border: 2px solid #ff9f1a;
+    border: 2px solid var(--border-color);
     box-sizing: border-box;
-    height: 36px;
-    margin-left: 5px;             /* space between label and select */
-    line-height: 1.1;             /* so text stays centered vertically */
-    vertical-align: middle; 
+    height: 4vh;
+    margin-left: 2vh;
+    line-height: 1.1;
+    vertical-align: middle;
     background: #fff;
+    width: vh;
 }
 
 
+/* Due Date Label/Input */
 label[for="due-date"] {
     display: flex;
-    align-items: center;         /* vertical alignment */
-    font-size: 24px;
-    font-weight: bold;
-    gap: 12px;   
-    padding: auto;                /* space between logo and text */
-    margin-bottom: 18px;
+    align-items: center;         
+    font-size: 20px;
+    font-weight: bold;           
 }
 
 label[for="due-date"]::before {
     content: "";
     display: inline-block;
-    width: 30px;                 /* icon size */
-    height: 30px;
-    background-image: url('Logo/calendar\ \(1\).png'); /* your icon path */
+    width: 25px;                 
+    height: 25px;
+    background-image: url('Logo/calendar\ \(1\).png'); 
     background-size: contain;
     background-repeat: no-repeat;
     margin-right: 6px;
 }
 
 label[for="due-date"] input {
-    font-size: 20px;
+    font-size: 15px;
     border-radius: 5px;
-    padding: 6px 18px;           /* vertical + horizontal padding */
-    border: 2px solid #ff9f1a;
+    padding: 10px;
+    border: 2px solid var(--border-color);
     box-sizing: border-box;
-    height: 36px;
-    margin-left: 5px;             /* space between label and select */
-    line-height: 1.1;             /* so text stays centered vertically */
-    vertical-align: middle; 
+    height: 4vh;
+    margin-left: 2vh;
+    line-height: 1.1;
+    vertical-align: middle;
     background: #fff;
+    width: vh;
 }
 
+/* Priority Section */
 label[for="priority"] {
     display: flex;
-    align-items: center;         /* vertical alignment */
-    font-size: 24px;
+    align-items: center;         
+    font-size: 20px;
     font-weight: bold;
-    gap: 12px;   
-    padding: auto;                /* space between logo and text */
 }
 
 label[for="priority"]::before {
     content: "";
     display: inline-block;
-    width: 30px;                 /* icon size */
-    height: 30px;
-    background-image: url('Logo/danger.png'); /* your icon path */
+    width: 25px;                 
+    height: 25px;
+    background-image: url('Logo/danger.png');
     background-size: contain;
     background-repeat: no-repeat;
     margin-right: 6px;
@@ -375,8 +489,7 @@ label[for="priority"]::before {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
-    margin-top: 10px;
+    gap: 10px;
     border: none;
 }
 
@@ -384,166 +497,216 @@ label[for="priority"]::before {
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin-right: 16px;
+    margin-right: 0px; 
 }
 
 .form-group input[type="radio"] {
-    display: none; /* hide default radio */
-}
-
-.form-group label {
-    cursor: pointer;
+    display: none; 
 }
 
 /* Style label as radio button */
 .form-group label {
     border: 2px solid #666;
-    border-radius: 12px;
-    padding: 6px 24px;
+    border-radius: 5px; 
+    padding: 8px 18px; 
     font-weight: bold;
     margin-right: 10px;
     background: #fff;
     transition: all 0.2s;
 }
 
+/* Set initial button colors */
 .form-group label:first-of-type {
-    border-color: #891d22;
-    color: #891d22;
+    border-color: var(--high-priority-color);
+    color: var(--high-priority-color);
 }
 .form-group label:nth-of-type(2) {
-    border-color: #d9812e;
-    color: #d9812e;
+    border-color: var(--medium-priority-color);
+    color: var(--medium-priority-color);
 }
 .form-group label:nth-of-type(3) {
-    border-color: #258725;
-    color: #258725;
+    border-color: var(--low-priority-color);
+    color: var(--low-priority-color);
 }
 .form-group label:nth-of-type(4) {
-    border-color: #222;
-    color: #222;
+    border-color: var(--border-color);
+    color: var(--primary-text-color);
 }
 
-/* Make the WHOLE priority button stay active when selected */
-.form-group input[type="radio"]:checked + label,
-.form-group input[type="radio"]:checked + span {
+/* When checked/focus, apply background color */
+.form-group input[type="radio"]:checked + span,
+.form-group input[type="radio"]:focus + span {
+    background-color: transparent;
+    border-width: 2px;
+}
+.form-group label:first-of-type input[type="radio"]:checked + span {
+    background-color: var(--high-priority-color);
     color: #fff;
 }
-/* High ACTIVE */
-.form-group label:nth-of-type(1).active {
-    background-color: #891d22;
-    color: white;
-    border-color: #891d22;
-}
-
-/* Medium ACTIVE */
-.form-group label:nth-of-type(2).active {
-    background-color: #d9812e;
-    color: white;
-    border-color: #d9812e;
-}
-
-/* Low ACTIVE */
-.form-group label:nth-of-type(3).active {
-    background-color: #258725;
-    color: white;
-    border-color: #258725;
-}
-
-/* None ACTIVE */
-.form-group label:nth-of-type(4).active {
-    background-color: #222;
-    color: white;
-    border-color: #222;
-}
-
-
-
-/* Priority - High */
-.form-group label:nth-of-type(1):hover {
-    background-color: #891d22;   /* border color */
-    color: #fff;                 /* text turns white */
-    border-color: #891d22;
-}
-
-/* Priority - Medium */
-.form-group label:nth-of-type(2):hover {
-    background-color: #d9812e;
+.form-group label:nth-of-type(2) input[type="radio"]:checked + span {
+    background-color: var(--medium-priority-color);
     color: #fff;
-    border-color: #d9812e;
 }
-
-/* Priority - Low */
-.form-group label:nth-of-type(3):hover {
-    background-color: #258725;
+.form-group label:nth-of-type(3) input[type="radio"]:checked + span {
+    background-color: var(--low-priority-color);
     color: #fff;
-    border-color: #258725;
 }
-
-/* Priority - None */
-.form-group label:nth-of-type(4):hover {
-    background-color: #222;
+.form-group label:nth-of-type(4) input[type="radio"]:checked + span {
+    background-color: var(--primary-text-color);
     color: #fff;
-    border-color: #222;
 }
 
+/* Hover States (make them match checked state) */
+.form-group label:nth-of-type(1):hover, .form-group label:nth-of-type(1).active {
+    background-color: var(--high-priority-color); 
+    color: #fff;                 
+    border-color: var(--high-priority-color);
+}
+
+.form-group label:nth-of-type(2):hover, .form-group label:nth-of-type(2).active {
+    background-color: var(--medium-priority-color);
+    color: #fff;
+    border-color: var(--medium-priority-color);
+}
+
+.form-group label:nth-of-type(3):hover, .form-group label:nth-of-type(3).active {
+    background-color: var(--low-priority-color);
+    color: #fff;
+    border-color: var(--low-priority-color);
+}
+
+.form-group label:nth-of-type(4):hover, .form-group label:nth-of-type(4).active {
+    background-color: var(--primary-text-color);
+    color: #fff;
+    border-color: var(--primary-text-color);
+}
+
+
+/* Notes Section */
 label[for="notes"] {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     display: block;
-    margin: 5px 0;
+    /* FIX: Remove flex-grow so Notes only takes its content height. */
+    flex-grow: 0; 
+    padding-bottom: 0;
 }
 
 label[for="notes"] textarea {
-    width: 750px;
+    width: 66vh; 
+    height: 10vh; 
     font-size: 14px;
     border-radius: 5px;
-    border: 2px solid #ff9f1a;
-    padding: 8px 12px;
+    border: 2px solid var(--border-color);
     box-sizing: border-box;
     resize: vertical;
+    min-height: 10vh;
     max-height: 250px;
 }
 
+/* Subtasks Section */
 label[for="subtasks"] {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     display: block;
-    margin: 0px;
 }
-
 
 label[for="subtasks"] ul {
     list-style-type: none;
-    padding: 0;
-    margin: 10px 30px;
+    font-weight: normal;
+    font-size: 15px;
+    /* This section is where subtasks are listed. Ensure it flows naturally. */
+    /* If content scrolls, this area will expand the parent form's scroll. */
 }
 
+/* Style for the new subtask input row */
+#subtask-list li:last-child {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+#subtask-list li:last-child input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid var(--border-color); 
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#subtask-list li:last-child button {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    font-size: 15px;
+    margin-right: 20vh;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+}
+#subtask-list li:last-child button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+#subtask-list li:last-child button::before {
+    content: "+"; 
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+
+/* Existing subtask list items */
+#subtask-list li {
+    display: flex;
+    align-items: center;
+    border: none;
+}
+#subtask-list li input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+#subtask-list li span {
+    flex-grow: 1;
+}
+
+/* --- BOTTOM BUTTONS (Delete, Close, Save) --- */
 .button-row {
     display: flex;
     align-items: center;
     gap: 18px;
-    margin: 5px;
     justify-content: space-between;
+    border-top: 1px solid var(--border-color); 
+    padding-top: 15px;
+    margin-top: 10px;
 }
 
 .button-row button {
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 10px;
-    border: 2px solid #891d22; /* Delete button’s color */
-    padding: 8px 20px;
+    border: 2px solid #891d22; 
+    padding: 4px 20px;
     background: #fff;
     color: #891d22;
     cursor: pointer;
     transition: background 0.16s, color 0.16s, border 0.16s;
     margin-right: 12px;
-
-    display: inline-block;
+    display: inline-flex; 
+    align-items: center;
 }
 
 #delete-task {
-    border-color: #891d22;
-    color: #891d22;
+    border-color: var(--high-priority-color);
+    color: var(--high-priority-color);
     height: 44px;
 }
 #delete-task::before {
@@ -554,19 +717,26 @@ label[for="subtasks"] ul {
     background-size: contain;
     background-image: url(Logo/delete.png);
     vertical-align: middle;
-    margin-bottom: 6px;
+    margin-bottom: 0px; 
     margin-right: 6px;
-
 }
 
 #delete-task:hover {
-    background: #891d22;
+    background: var(--high-priority-color);
     color: #fff;
 }
 
+/* Close & Save container div */
+.button-row > div {
+    display: flex;
+    gap: 15px;
+    height: 44px;
+}
+
 #close-details, #save-task {
-    border-color: #3b2200;
-    color: #3b2200;
+    border-color: var(--primary-text-color);
+    color: var(--primary-text-color);
+    margin-right: 0;
 }
 
 #close-details::before, #save-task::before {
@@ -574,7 +744,7 @@ label[for="subtasks"] ul {
     display: inline-block;
     background-size: contain;
     vertical-align: middle;
-    margin-bottom: 3px;
+    margin-bottom: 0px; 
     margin-right: 6px;
 }
 #close-details::before {
@@ -583,28 +753,218 @@ label[for="subtasks"] ul {
     height: 18px;
 }
 #save-task::before {
-    background-image: url(Logo/diskette.png);
-    width: 20px;
-    height: 20px;
+    content: "+"; 
+    font-size: 1.4em;
+    font-weight: bold;
+    width: auto;
+    height: auto;
+    background-image: none;
+    margin-bottom: 0;
 }
 
-#close-details:hover, #save-task:hover {
-    background: #3b2200;
+/* Close Button Hover */
+#close-details:hover {
+    background: var(--primary-text-color);
     color: #fff;
-    border-color: #ff9f1a;
+    border-color: var(--primary-text-color);
 }
 
-/* If you want Save button to stand out more */
+/* Save/Add Button Styling */
 #save-task {
-    border-color: #ff9f1a;
-    color: #ff9f1a;
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: #fff;
     margin-right: 0px;
 }
 
 #save-task:hover {
-    background: #ff9f1a;
+    background: #e68a00; 
     color: #fff;
-    border-color: #3b2200;
+    border-color: #e68a00;
+}
+
+/* --- ARCHIVE PAGE --- */
+#archive-page {
+    height: 85vh;
+    display: flex;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+    flex-direction: column;
+}
+
+#archive-page details {
+
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+#archive-page summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#archive-page summary button {
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #fff; 
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    margin-left: auto;
+    display: inline-flex;
+}
+
+#archive-page summary button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#archive-page li {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 0;
+    gap: 15px;
+}
+
+#archive-page li:last-of-type {
+}
+
+#archive-page li input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#archive-page li button {
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#archive-page li button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* --- SETTINGS PAGE --- */
+#settings-page {
+    height: 85vh;
+    display: flex;
+    width: vh;
+    margin: auto;
+    max-width: 1000px;
+    background-color: var(--secondary-background);
+}
+
+#setting-left-pane {
+    padding: 20px 10px;
+    gap: 10px;
+    flex: 0 0 20%;
+    border: none;
+    border-right: 1px solid var(--border-color);
+}
+
+#setting-left-pane label {
+    display: block;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#setting-left-pane label:hover {
+    background-color: var(--primary-color);
+    color: white; 
+}
+
+#setting-left-pane label:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+/* i want the 3 child to be colour background */
+#setting-left-pane label:nth-child(5) {
+    background-color: var(--primary-color);
+}
+
+/* Style for non-implemented labels (linked to disabled radio inputs) */
+#setting-left-pane input[type="radio"][disabled] + label {
+    color: #888; /* Dim the text to show they are disabled */
+    cursor: default; /* Change cursor to indicate no action */
+}
+
+/* Visual change on hover for non-implemented labels */
+#setting-left-pane input[type="radio"][disabled] + label:hover {
+    background-color: transparent; /* Prevent the primary color hover effect */
+    color: #555; /* Optionally darken the dimmed text slightly */
+}
+
+/* Ensure the background color is only applied on functional/active tabs */
+#setting-left-pane label:hover:not(#setting-left-pane input[type="radio"][disabled] + label) {
+    background-color: var(--primary-color);
+    color: white; 
+}
+
+
+#setting-left-pane input[type="radio"] {
+    display: none;
+}
+
+#setting-left-pane input[type="radio"]:checked + label {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#settings-page section.pane {
+    padding: 20px;
+    border: none;
+    flex: 0 0 73%;
+    margin-right: 30px;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    gap: 10px;
+}
+
+.switch input[type="checkbox"] {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+}
+
+#themes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.theme {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: #e9e9e9;
+    cursor: pointer;
 }
 
 .popup-overlay {
@@ -626,7 +986,7 @@ label[for="subtasks"] ul {
     padding: 25px;
     width: 320px;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -689,5 +1049,57 @@ label[for="subtasks"] ul {
 #delete-popup-confirm:hover {
     background: #b71c1c;
 }
+/* --- TASK REWARDS PANE STYLING --- */
 
+/* Ensure the rewards pane is a column layout */
+#task-rewards-pane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    text-align: center;
+}
 
+/* Hide the old static span content */
+#task-rewards-pane span {
+    display: none; 
+}
+
+/* Container for the droplet tracking and tree image */
+#rewards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+#tree-image {
+    width: 150px;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* Assume a placeholder image is set in JS */
+    transition: transform 0.5s ease-out; /* For growth animation */
+}
+
+/* Droplet indicators */
+#droplets-container {
+    display: flex;
+    gap: 10px;
+}
+
+.droplet {
+    width: 25px;
+    height: 25px;
+    background-image: url(Logo/water.png); /* Placeholder image */
+    background-size: contain;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+/* CSS class to show a droplet has been used */
+.droplet.used {
+    opacity: 0.2;
+}
