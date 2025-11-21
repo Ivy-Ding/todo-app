@@ -441,6 +441,9 @@ function refreshArchiveCompletedPane() {
 			checkbox.addEventListener('change', function () {
 				if (!this.checked) {
 					task.dateCompleted = null; // no completed date anymore
+					showToast(
+						'Tip: unchecked tasks to go back to the "Task" pane...'
+					);
 					refreshTaskListPane();
 					refreshArchiveCompletedPane();
 				}
@@ -503,6 +506,7 @@ function refreshArchiveDeletedPane() {
 			// checkbox (just a selector, does not change state)
 			const checkbox = document.createElement('input');
 			checkbox.type = 'checkbox';
+			checkbox.checked = task.dateCompleted != null;
 
 			// title
 			const title = document.createElement('span');
