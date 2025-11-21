@@ -18,6 +18,7 @@
     --theme-monochrome: #202020;
     --page-max-width: 1500px;
     --form-field-separator: 20px;
+    --page-height: 80vh;
 }
 
 
@@ -108,7 +109,7 @@ nav button::before {
 
 /* --- MAIN PAGE LAYOUT (Tasks Page) --- */
 .page {
-    height: 85vh; /* total container height */
+    height: var(--page-height); /* total container height */
     /* *** MODIFIED FOR 2 COLUMNS *** */
     /* Layout: TaskList (240px) | TaskDetails (1fr) */
     grid-template-columns: 1fr 2fr; 
@@ -807,7 +808,7 @@ label[for="subtasks"] ul {
 
 /* --- ARCHIVE PAGE --- */
 #archive-page {
-    height: 85vh;
+    height: var(--page-height);
     display: flex;
     width: vh;
     margin: auto;
@@ -882,7 +883,7 @@ label[for="subtasks"] ul {
 
 /* --- SETTINGS PAGE --- */
 #settings-page {
-    height: 85vh;
+    height: var(--page-height);
     display: flex;
     width: vh;
     margin: auto;
@@ -1229,4 +1230,18 @@ label[for="subtasks"] ul {
 @keyframes fadeout {
     from {opacity: 1;}
     to {opacity: 0;}
+}
+
+.top {
+    display: flex;
+    align-items: center;
+}
+.top h1{
+    margin-right: auto;
+}
+.top button{
+    background: none;
+    border-color: var(--primary-color);
+    text-align: center;
+    align-items: center;
 }
