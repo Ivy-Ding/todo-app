@@ -19,9 +19,8 @@
 -->
 
 	<body>
-		<h1>Todo App</h1>
 		<nav>
-			<button id="tasks-button">Tasks</button>
+			<button id="tasks-button" class="active">Tasks</button>
 			<button id="archive-button">Archive</button>
 			<button id="settings-button">Settings</button>
 		</nav>
@@ -81,21 +80,24 @@
 					<h2>Task Details</h2>
 				</div>
 				<form id="task-details-form">
-					<input
-						aria-label="“title”"
-						type="text"
-						id="title"
-						name="title"
-						placeholder="Title Here"
-						required
-						required
-						oninvalid="this.setCustomValidity('Task title cannot be empty')"
-						oninput="this.setCustomValidity('')"
-					/>
+					<label for="title" class="title-label">
+						<span class="title-required">*</span>
+						<input
+							aria-label="title"
+							type="text"
+							id="title"
+							name="title"
+							placeholder="Title Here"
+							required
+							oninvalid="this.setCustomValidity('Task title cannot be empty')"
+							oninput="this.setCustomValidity('')"
+						/>
+					</label>
 
 					<label for="category"
 						>Category:
 						<select id="category" name="category">
+							<option value="default" disabled selected>Select a category...</option>
 							<option value="add-new">+ Add New Category</option>
 						</select>
 					</label>
@@ -105,41 +107,40 @@
 						<input type="date" id="due-date" name="due-date" />
 					</label>
 
+					<label for="priority"
+						>Priority:
+					</label> <!-- moved this here because the form group was making it off-centre -->
+
 					<fieldset class="form-group">
-						<legend>Priority</legend>
 
 						<label>
-							<input type="radio" name="priority" value="3" />
-							High
+							<input type="radio" name="priority" value="3">
+							<span>High</span>
 						</label>
-
+					
 						<label>
-							<input type="radio" name="priority" value="2" />
-							Medium
+							<input type="radio" name="priority" value="2">
+							<span>Medium</span>
 						</label>
-
+					
 						<label>
-							<input type="radio" name="priority" value="1" />
-							Low
+							<input type="radio" name="priority" value="1">
+							<span>Low</span>
 						</label>
-
+					
 						<label>
-							<input
-								type="radio"
-								name="priority"
-								value="0"
-								checked
-							/>
-							None
+							<input type="radio" name="priority" value="0">
+							<span>None</span>
 						</label>
+					
 					</fieldset>
-
+					
 					<label for="notes"
-						>Notes<br />
+						>Notes<br/>
 						<textarea id="notes" name="notes"></textarea>
 					</label>
 
-					<label
+					<label for="subtasks"
 						>Subtasks
 						<ul id="subtask-list">
 							<li>
@@ -150,28 +151,118 @@
 								<input
 									type="text"
 									id="new-subtask-input"
-									name="title"
+									name="subtask-title"
 								/>
 								<button id="new-subtask-button">Add</button>
 							</li>
 						</ul>
-					</label>
-				</form>
-				<div class="button-row">
-					<button aria-label="delete-task" id="delete-task">
-						Delete
-					</button>
-					<div >
-						<button aria-label="close-details" id="close-details">
-							Close
-						</button>
-						<button
-							aria-label="save-task"
-							id="save-task"
-							type="submit"
-						>
-							Save
-						</button>
+					</label>				
+						<div class="button-row">
+							<button id="delete-task">Delete</button>
+						
+							<div>
+								<button id="close-details">Close</button>
+								<button id="save-task">Save</button>
+							</div>
+						</div>	
+					</form> 
+			</section>
+
+			<div id = "home-side-pane">
+				<section id="task-rewards-pane" class="pane">
+						<div class="header">
+							<h2>Rewards</h2>
+						</div>
+						<span>Water Droplet Progress Bar</span>
+						<span>Plant Image</span>
+				</section>
+
+				<section id="task-status-pane" class="pane">
+					<div class="header">
+						<h2>My Status</h2>
+					</div>
+					<div class="body">
+						<div>						
+							<h3>Ongoing</h3>
+							<ul id="status-ongoing">
+								<li>Priority Task: <span id="priority-task-count">0</span></li>
+								<li>Task Due in 3 Days: <span id="due-3days-count">0</span></li>
+								<li>Task Due in 1 Week: <span id="due-1week-count">0</span></li>
+								<li>Task Due in 1 Month: <span id="due-1month-count">0</span></li>
+								<li>Total Task: <span id="total-task-count">0</span></li>
+							</ul>
+						</div>
+
+						<div>
+							<h3>Completed</h3>
+							<ul id="status-completed">
+								<li>Completed Today: <span id="completed-today-count">0</span></li>
+								<li>Completed 1 Week: <span id="completed-1week-count">0</span></li>
+								<li>Completed 1 Month: <span id="completed-1month-count">0</span></li>
+								<li>Till Date: <span id="completed-total-count">0</span></li>
+							</ul>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<div id ="archive-page" class="page">	
+			<details id="recently-deleted-list">
+				<summary>Recently Deleted</summary>
+					<li id="123"><input type="checkbox" checked><span>sample task</span><button>Undelete</button></li>
+			</details>
+			<details id="completed-tasks-list">
+				<summary>Completed <button aria-label="filter">Filter</button></summary>
+					<li id="456"><input type="checkbox" checked><span>sample task</span><span>2025-11-10</span></li>
+			</details>
+		</div>
+
+		<div id ="settings-page" class="page">
+			<fieldset id="setting-left-pane" class="pane-fixed-dock-20">
+				<label>
+					<input type="radio" name="settings-tab" value="account" disabled/>
+					Account
+				</label><br>
+
+				<label>
+					<input type="radio" name="settings-tab" value="learn" disabled/>
+					Learn
+				</label><br>
+
+				<label>
+					<input type="radio" name="settings-tab" value="appearance" checked/>
+					Appearance
+				</label><br>
+
+				<label>
+					<input type="radio"	name="settings-tab" value="about" disabled/>
+					About
+				</label><br>
+
+				<label>
+					<input type="radio" name="settings-tab" value="help" disabled/>
+					Help
+				</label><br>
+			</fieldset>
+
+			<section class="pane">
+				<label class="switch">
+					Match System Appearance
+					<input type = "checkbox">
+				</label>
+				<div id="themes">
+					<div id="theme-1" class="theme">
+						theme 1 image here
+					</div>
+					<div id="theme-2" class="theme">
+						theme 2 image here
+					</div>
+					<div id="theme-3" class="theme">
+						theme 3 image here
+					</div>
+					<div id="theme-4" class="theme">
+						theme 4 image here
 					</div>
 				</div>
 			</section>
@@ -201,6 +292,31 @@
 		</section>
 
 		</div>
+		<!-- Popup Modal -->
+		<div id="popup-overlay" class="popup-overlay">
+			<div class="popup-box">
+				<h3 id="popup-title">Popup</h3>
+
+				<input id="popup-input" type="text" placeholder="Enter name..." />
+
+				<div class="popup-buttons">
+					<button id="popup-close">Close</button>
+					<button id="popup-save">Save</button>
+				</div>
+			</div>
+		</div>
+		<!-- Delete Confirmation Popup -->
+		<div id="delete-popup-overlay" class="popup-overlay">
+			<div class="popup-box">
+				<h3>Confirm Delete</h3>
+				<p id="delete-popup-message"></p>
+
+				<div class="popup-buttons">
+					<button id="delete-popup-cancel">Cancel</button>
+					<button id="delete-popup-confirm">Delete</button>
+				</div>
+			</div>
+		</div>
+
 	</body>
 </html>
-
