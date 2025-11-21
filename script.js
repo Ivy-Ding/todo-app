@@ -294,7 +294,7 @@ let popupSaveCallback = null;
 let deleteCallback = null;
 
 let currentFilter = {};
-let currentSort = {};
+let currentSort = null;
 
 const PAGES = {
 	home: 'home',
@@ -584,18 +584,49 @@ function refreshArchiveDeletedPane() {
 function handleFilterOnClick() {
     const filterDropdown = document.getElementById('filter-dropdown');
     const sortDropdown = document.getElementById('sort-dropdown');
+    const categorySelect = document.getElementById('category-select');
 
     // 1. Auto-close the Sort menu if it's open
     sortDropdown.style.display = 'none';
 
     // 2. Toggle the Filter menu
     if (filterDropdown.style.display === 'none' || filterDropdown.style.display === '') {
+        
+        // --- START OF NEW LOGIC ---
+        
+        // Step A: Save the current selection so it doesn't disappear while valid
+        const currentSelection = categorySelect.value;
+
+        // Step B: Clear the dropdown completely (removes hardcoded HTML options)
+        categorySelect.innerHTML = '';
+
+        // Step C: Add the default "All" option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "-- All Categories --";
+        categorySelect.appendChild(defaultOption);
+
+        // Step D: Loop through your USER-MADE list and add them
+        // This ensures the filter ONLY matches what is in your categoriesList
+        categoriesList.forEach(catName => {
+            const opt = document.createElement('option');
+            opt.value = catName;
+            opt.textContent = catName;
+            categorySelect.appendChild(opt);
+        });
+
+        // Step E: Restore selection if it still exists in the new list
+        if (currentSelection) {
+            categorySelect.value = currentSelection;
+        }
+        
+        // --- END OF NEW LOGIC ---
+
         filterDropdown.style.display = 'flex';
         
         const filterSelect = document.getElementById('filter-select');
-        const categorySelect = document.getElementById('category-select');
         
-        // UPDATE: Added logic to close menu on selection
+        // Logic to filter and auto-close
         filterSelect.onchange = categorySelect.onchange = () => {
             currentFilter = {
                 dueWithin: filterSelect.value,
@@ -603,7 +634,7 @@ function handleFilterOnClick() {
             };
             refreshTaskListPane(currentFilter, currentSort);
             
-            // NEW: Close the menu automatically
+            // Auto-close the menu
             filterDropdown.style.display = 'none'; 
         };
 
