@@ -30,8 +30,32 @@
 				<div class="header">
 					<h2>Tasks</h2>
 					<div class="right">
-						<button aria-label="filter">Filter</button>
-						<button aria-label="sort">Sort</button>
+						<button id="filter-button" aria-label="filter">Filter</button>
+						<select id="filter-select" style="display: none;">
+							<option value="">-- No Due Date Filter --</option>
+							<option value="3days">Due within 3 days</option>
+							<option value="1week">Due within 1 week</option>
+							<option value="1month">Due within 1 month</option>
+						</select>
+						<select id="category-select" style="display: none;">
+							<option value="">-- All Categories --</option>
+							<option value="Work">Assignments</option>
+							<option value="Personal">Projects</option>
+							<option value="Errands">Tests and Exams</option>
+						</select>
+						
+						<button id="sort-button" aria-label="sort">Sort</button>
+						<select id="sort-select" style="display: none;">
+							<option value="">-- No Sort --</option>
+							<optgroup label="Priority">
+								<option value="priority-asc">Low to High</option>
+								<option value="priority-desc">High to Low</option>
+							</optgroup>
+							<optgroup label="Due Date">
+								<option value="dueDate-asc">Most recent last</option>
+								<option value="dueDate-desc">Most recent first</option>
+							</optgroup>
+						</select>
 					</div>
 				</div>
 				<div class="body">
@@ -242,6 +266,31 @@
 					</div>
 				</div>
 			</section>
+
+			<section id="task-status-pane" class="pane">
+			<div class="header">
+				<h2>My Status</h2>
+			</div>
+			<div class="body">
+				<h3>Ongoing</h3>
+				<ul id="status-ongoing">
+					<li>Priority Task: <span id="priority-task-count">0</span></li>
+					<li>Task Due in 3 Days: <span id="due-3days-count">0</span></li>
+					<li>Task Due in 1 Week: <span id="due-1week-count">0</span></li>
+					<li>Task Due in 1 Month: <span id="due-1month-count">0</span></li>
+					<li>Total Task: <span id="total-task-count">0</span></li>
+				</ul>
+
+				<h3>Completed</h3>
+				<ul id="status-completed">
+					<li>Completed Today: <span id="completed-today-count">0</span></li>
+					<li>Completed 1 Week: <span id="completed-1week-count">0</span></li>
+					<li>Completed 1 Month: <span id="completed-1month-count">0</span></li>
+					<li>Till Date: <span id="completed-total-count">0</span></li>
+				</ul>
+			</div>
+		</section>
+
 		</div>
 		<!-- Popup Modal -->
 		<div id="popup-overlay" class="popup-overlay">
