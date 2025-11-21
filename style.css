@@ -1,5 +1,5 @@
 /* constant for colour*/
-:root{ 
+:root {
     /* Define the variable with two hyphens: --variable-name */
     --primary-color: #ff9f1a;
     /* Define colors that resemble the PDF prototype for a clean, professional look */
@@ -9,6 +9,11 @@
     --high-priority-color: #891d22; /* Reddish */
     --medium-priority-color: #d9812e; /* Orange/Brown */
     --low-priority-color: #258725; /* Green */
+    --close-butoon-hover: #444444; /* Dark gray for close button hover */
+    --theme-1: #ff9f1a;
+    --theme-2: #43a047;
+    --theme-3: #1e88e5;
+    --theme-4: #cd12a8ff;
 }
 
 
@@ -113,7 +118,6 @@ nav button::before {
     border: none; 
     height: 100%;
     min-height: 0;
-
 }
 /* Vertical divider between the two columns */
 #tasks-list-pane {
@@ -126,6 +130,14 @@ nav button::before {
     border-radius: 0 0 5px 0;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+#task-details-pane h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 1px;
 }
 
 #home-side-pane {
@@ -356,14 +368,15 @@ nav button::before {
 
 /* --- TASK DETAILS FORM --- */
 #task-details-form {
-    display: flex;
-    flex-direction: column;
-    padding: 4px 10px;
-    gap: 10px;
+    /* Set position relative for button anchor. Remove scroll from here. */
     position: relative;
     flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px 15px 15px 15px; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: hidden; 
+    /* Add bottom padding to create clearance for the fixed button-row (~74px height). */
+    padding: 10px 15px 74px 15px; 
 }
 
 #task-details-form input#title {
@@ -481,8 +494,7 @@ label[for="priority"]::before {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
-    margin-top: 10px;
+    gap: 10px;
     border: none;
 }
 
@@ -490,99 +502,88 @@ label[for="priority"]::before {
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin-right: 16px;
+    margin-right: 0px; 
 }
 
 .form-group input[type="radio"] {
-    display: none; /* hide default radio */
-}
-
-.form-group label {
-    cursor: pointer;
+    display: none; 
 }
 
 /* Style label as radio button */
 .form-group label {
     border: 2px solid #666;
-    border-radius: 12px;
-    padding: 6px 24px;
+    border-radius: 5px; 
+    padding: 8px 18px; 
     font-weight: bold;
     margin-right: 10px;
     background: #fff;
     transition: all 0.2s;
 }
 
+/* Set initial button colors */
 .form-group label:first-of-type {
-    border-color: #891d22;
-    color: #891d22;
+    border-color: var(--high-priority-color);
+    color: var(--high-priority-color);
 }
 .form-group label:nth-of-type(2) {
-    border-color: #d9812e;
-    color: #d9812e;
+    border-color: var(--medium-priority-color);
+    color: var(--medium-priority-color);
 }
 .form-group label:nth-of-type(3) {
-    border-color: #258725;
-    color: #258725;
+    border-color: var(--low-priority-color);
+    color: var(--low-priority-color);
 }
 .form-group label:nth-of-type(4) {
-    border-color: #222;
-    color: #222;
+    border-color: var(--border-color);
+    color: var(--primary-text-color);
 }
 
-/* Make the WHOLE priority button stay active when selected */
-.form-group input[type="radio"]:checked + label,
-.form-group input[type="radio"]:checked + span {
+/* When checked/focus, apply background color */
+.form-group input[type="radio"]:checked + span,
+.form-group input[type="radio"]:focus + span {
+    background-color: transparent;
+    border-width: 2px;
+}
+.form-group label:first-of-type input[type="radio"]:checked + span {
+    background-color: var(--high-priority-color);
     color: #fff;
 }
-/* High ACTIVE */
-.form-group label:nth-of-type(1).active {
-    background-color: #891d22;
-    color: white;
-    border-color: #891d22;
-}
-
-/* Medium ACTIVE */
-.form-group label:nth-of-type(2).active {
-    background-color: #d9812e;
-    color: white;
-    border-color: #d9812e;
-}
-
-/* Low ACTIVE */
-.form-group label:nth-of-type(3).active {
-    background-color: #258725;
-    color: white;
-    border-color: #258725;
-}
-
-/* None ACTIVE */
-.form-group label:nth-of-type(4).active {
-    background-color: #222;
-    color: white;
-    border-color: #222;
-}
-
-
-
-/* Priority - High */
-.form-group label:nth-of-type(1):hover {
-    background-color: #891d22;   /* border color */
-    color: #fff;                 /* text turns white */
-    border-color: #891d22;
-}
-
-/* Priority - Medium */
-.form-group label:nth-of-type(2):hover {
-    background-color: #d9812e;
+.form-group label:nth-of-type(2) input[type="radio"]:checked + span {
+    background-color: var(--medium-priority-color);
     color: #fff;
-    border-color: #d9812e;
+}
+.form-group label:nth-of-type(3) input[type="radio"]:checked + span {
+    background-color: var(--low-priority-color);
+    color: #fff;
+}
+.form-group label:nth-of-type(4) input[type="radio"]:checked + span {
+    background-color: var(--primary-text-color);
+    color: #fff;
 }
 
-/* Priority - Low */
-.form-group label:nth-of-type(3):hover {
-    background-color: #258725;
+/* Hover States (make them match checked state) */
+.form-group label:nth-of-type(1):hover, .form-group label:nth-of-type(1).active {
+    background-color: var(--high-priority-color); 
+    color: #fff;                 
+    border-color: var(--high-priority-color);
+}
+
+.form-group label:nth-of-type(2):hover, .form-group label:nth-of-type(2).active {
+    background-color: var(--medium-priority-color);
     color: #fff;
-    border-color: #258725;
+    border-color: var(--medium-priority-color);
+}
+
+.form-group label:nth-of-type(3):hover, .form-group label:nth-of-type(3).active {
+    background-color: var(--low-priority-color);
+    color: #fff;
+    border-color: var(--low-priority-color);
+}
+
+.form-group label:nth-of-type(4):hover, .form-group label:nth-of-type(4).active {
+    background-color: var(--primary-text-color);
+    color: #fff;
+    border-color: var(--primary-text-color);
 }
 
 
@@ -591,7 +592,9 @@ label[for="notes"] {
     font-size: 20px;
     font-weight: bold;
     display: block;
-
+    /* FIX: Remove flex-grow so Notes only takes its content height. */
+    flex-grow: 0; 
+    padding-bottom: 0;
 }
 
 label[for="notes"] textarea {
@@ -615,8 +618,10 @@ label[for="subtasks"] {
 
 label[for="subtasks"] ul {
     list-style-type: none;
-    padding: 0;
-    margin: 10px 0; 
+    font-weight: normal;
+    font-size: 15px;
+    /* This section is where subtasks are listed. Ensure it flows naturally. */
+    /* If content scrolls, this area will expand the parent form's scroll. */
 }
 
 /* Style for the new subtask input row */
@@ -642,6 +647,7 @@ label[for="subtasks"] ul {
     flex-shrink: 0;
     padding: 8px 18px;
     font-size: 15px;
+    margin-right: 20vh;
     font-weight: bold;
     border-radius: 5px;
     background-color: #fff;
@@ -664,13 +670,11 @@ label[for="subtasks"] ul {
 #subtask-list li {
     display: flex;
     align-items: center;
-    padding: 5px 0;
-    margin-bottom: 5px;
     border: none;
 }
 #subtask-list li input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     margin-right: 10px;
     border: 1px solid var(--border-color);
     border-radius: 3px;
@@ -684,7 +688,6 @@ label[for="subtasks"] ul {
     display: flex;
     align-items: center;
     gap: 18px;
-    margin: 5px;
     justify-content: space-between;
     border-top: 1px solid var(--border-color); 
     padding-top: 15px;
@@ -696,7 +699,7 @@ label[for="subtasks"] ul {
     font-weight: bold;
     border-radius: 10px;
     border: 2px solid #891d22; 
-    padding: 8px 20px;
+    padding: 4px 20px;
     background: #fff;
     color: #891d22;
     cursor: pointer;
@@ -731,7 +734,8 @@ label[for="subtasks"] ul {
 /* Close & Save container div */
 .button-row > div {
     display: flex;
-    gap: 15px; 
+    gap: 15px;
+    height: 44px;
 }
 
 #close-details, #save-task {
@@ -754,20 +758,24 @@ label[for="subtasks"] ul {
     height: 18px;
 }
 #save-task::before {
-    content: "+"; 
-    font-size: 1.4em;
-    font-weight: bold;
-    width: auto;
-    height: auto;
-    background-image: none;
-    margin-bottom: 0;
+    background-image: url(Logo/diskette.png);
+    width: 20px;
+    height: 20px;
+}
+
+#save-task::before {
+    filter: brightness(0) invert(1);
+}
+
+#close-details:hover::before {
+    filter: brightness(0) invert(1);
 }
 
 /* Close Button Hover */
 #close-details:hover {
-    background: var(--primary-text-color);
+    background: var(--close-butoon-hover);
     color: #fff;
-    border-color: var(--primary-text-color);
+    border-color: var(--close-butoon-hover);
 }
 
 /* Save/Add Button Styling */
@@ -779,9 +787,10 @@ label[for="subtasks"] ul {
 }
 
 #save-task:hover {
-    background: #e68a00; 
+    background: var(--primary-color); 
+    filter: brightness(0.85);
     color: #fff;
-    border-color: #e68a00;
+    border-color: var(--primary-color);
 }
 
 /* --- ARCHIVE PAGE --- */
@@ -834,12 +843,10 @@ label[for="subtasks"] ul {
     align-items: center;
     justify-content: flex-start;
     padding: 8px 0;
-    border-bottom: 1px dashed var(--border-color);
     gap: 15px;
 }
 
 #archive-page li:last-of-type {
-    border-bottom: none;
 }
 
 #archive-page li input[type="checkbox"] {
@@ -853,6 +860,7 @@ label[for="subtasks"] ul {
     border-radius: 5px;
     padding: 4px 10px;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 #archive-page li button:hover {
@@ -886,6 +894,39 @@ label[for="subtasks"] ul {
     border-radius: 5px;
     cursor: pointer;
 }
+
+#setting-left-pane label:hover {
+    background-color: var(--primary-color);
+    color: white; 
+}
+
+#setting-left-pane label:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+/* i want the 3 child to be colour background */
+#setting-left-pane label:nth-child(5) {
+    background-color: var(--primary-color);
+}
+
+/* Style for non-implemented labels (linked to disabled radio inputs) */
+#setting-left-pane input[type="radio"][disabled] + label {
+    color: #888; /* Dim the text to show they are disabled */
+    cursor: default; /* Change cursor to indicate no action */
+}
+
+/* Visual change on hover for non-implemented labels */
+#setting-left-pane input[type="radio"][disabled] + label:hover {
+    background-color: transparent; /* Prevent the primary color hover effect */
+    color: #555; /* Optionally darken the dimmed text slightly */
+}
+
+/* Ensure the background color is only applied on functional/active tabs */
+#setting-left-pane label:hover:not(#setting-left-pane input[type="radio"][disabled] + label) {
+    background-color: var(--primary-color);
+    color: white; 
+}
+
 
 #setting-left-pane input[type="radio"] {
     display: none;
@@ -924,6 +965,7 @@ label[for="subtasks"] ul {
     padding-top: 10px;
 }
 
+
 .theme {
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -932,9 +974,58 @@ label[for="subtasks"] ul {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    background-color: #e9e9e9;
     cursor: pointer;
 }
+
+/* --- THEME SELECTION VISUAL STATE --- */
+.theme.selected {
+    /* Highlight the currently selected theme box */
+    border: 4px solid var(--primary-color) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.theme:hover {
+    background-color: var(--primary-color); /* Orange from your theme data */
+    color: white;
+}
+#theme-1 {
+    border: 2px solid var(--theme-1);
+}
+
+#theme-1:hover {
+    background-color: var(--theme-1); /* Green from your theme data */
+    color: white;
+}
+
+#theme-2 {
+    border: 2px solid var(--theme-2);
+}
+
+#theme-2:hover {
+    background-color: var(--theme-2); /* Green from your theme data */
+    color: white;
+}
+
+#theme-3 {
+    border: 2px solid var(--theme-3);
+}
+
+/* Theme 3 (Blue) Hover */
+#theme-3:hover {
+    background-color: var(--theme-3); /* Blue from your theme data */
+    color: white;
+}
+#theme-4 {
+    border: 2px solid var(--theme-4);
+}
+
+/* Theme 4 (Purple) Hover */
+#theme-4:hover {
+    background-color: var(--theme-4); /* Purple from your theme data */
+    color: white;
+}
+
 
 .popup-overlay {
     position: fixed;
@@ -955,7 +1046,7 @@ label[for="subtasks"] ul {
     padding: 25px;
     width: 320px;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -1018,4 +1109,59 @@ label[for="subtasks"] ul {
 #delete-popup-confirm:hover {
     background: #b71c1c;
 }
+/* --- TASK REWARDS PANE STYLING --- */
+
+/* Ensure the rewards pane is a column layout */
+#task-rewards-pane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Hide the old static span content */
+#task-rewards-pane span {
+    display: none; 
+}
+
+/* Container for the droplet tracking and tree image */
+#rewards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+#tree-image {
+    width: 150px;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* Assume a placeholder image is set in JS */
+    transition: transform 0.5s ease-out; /* For growth animation */
+}
+
+/* Droplet indicators */
+#droplets-container {
+    display: flex;
+    gap: 10px;
+}
+
+.droplet {
+    width: 25px;
+    height: 25px;
+    background-image: url(Logo/water.png); /* Placeholder image */
+    background-size: contain;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+/* CSS class to show a droplet has been used */
+.droplet.used {
+    opacity: 0.2;
+}
+
 
