@@ -65,7 +65,7 @@ const categorySelect = document.getElementById('category');
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
-//POPUP MODAL
+//POPUP MODAL FOR ADDING CATEGORY
 const popupOverlay = document.getElementById('popup-overlay');
 const popupInput = document.getElementById('popup-input');
 const popupTitle = document.getElementById('popup-title');
@@ -284,10 +284,10 @@ function refreshTaskListPane(filter = null, sort = null) {
 function refreshArchiveCompletedPane() {
     const completedList = document.getElementById("completed-tasks-list");
 
-    // Clear before re-rendering
+    // Clear 
     completedList.innerHTML = "";
 
-    // Only tasks that have a non-null/non-undefined dateCompleted AND are not deleted
+    // Only tasks that have a non-null dateCompleted AND are not deleted
     taskList
         .filter(t => t.dateCompleted != null && !t.dateDeleted)
         .sort(compareByCreationTime)
@@ -352,7 +352,7 @@ function refreshArchiveCompletedPane() {
 function refreshArchiveDeletedPane() {
     const deletedList = document.getElementById("recently-deleted-list");
 
-    // Clear UI
+    // Clear
     deletedList.innerHTML = "";
 
     taskList
@@ -363,7 +363,7 @@ function refreshArchiveDeletedPane() {
             const li = document.createElement("li");
             li.id = task.dateCreated;
 
-            // checkbox (just a selector, does not change state)
+            // checkbox
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
 
@@ -390,7 +390,7 @@ function refreshArchiveDeletedPane() {
 					refreshTaskListPane();
 				}
 			
-				refreshArchiveDeletedPane(); // always remove from deleted list
+				refreshArchiveDeletedPane(); 
 			});
 			
 			
@@ -702,11 +702,12 @@ function closeDeletePopup() {
     deleteCallback = null;
 }
 
+//Reusing add new category pop up modal for showing button not functional right now
 function openInfoPopup(message) {
     popupTitle.textContent = message;
 
-    popupInput.style.display = "none";  // hide input
-    popupSave.style.display = "none";   // hide save button
+    popupInput.style.display = "none";  
+    popupSave.style.display = "none";   
     popupClose.textContent = "OK";
 
     popupOverlay.style.display = "flex";
