@@ -47,6 +47,12 @@ nav {
     justify-content: flex-start;
 }
 
+/* fall back button hover */
+#task-list-container button:hover {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+}
+
 nav button {
     flex: 0 0 auto;
     padding: 10px;

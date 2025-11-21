@@ -303,7 +303,10 @@ function renderTaskToLi(task) {
 	});
 
 	const editButton = document.createElement('button');
-	editButton.textContent = 'Edit';
+	// editButton.style.padding = '10px 20px';
+	editButton.style.height = '22px';
+	editButton.innerHTML =
+		'<img src=Logo/pencil.png width=16 height=16 margin-right=5px>      Edit';
 	editButton.addEventListener('click', () => handleEditOnClick(task));
 
 	li.appendChild(checkbox);
