@@ -317,7 +317,7 @@ nav button::before {
 #new-task-form {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: auto;
     flex-shrink: 0;
     width: 100%;
     max-width: none;
@@ -692,7 +692,7 @@ label[for="subtasks"] ul {
     justify-content: space-between;
     border-top: 1px solid var(--border-color); 
     padding-top: 15px;
-    margin-top: 10px;
+    margin-top: auto;
 }
 
 .button-row button {
