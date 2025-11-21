@@ -882,15 +882,25 @@ function handleTaskCompletedForReward() {
 	if (tasksToNextGrowth <= 0) {
 		// Tree Growth Animation
 		const treeImage = document.getElementById('tree-image');
+
+		if (currentTreeStage < 5) {
+			// Apply a slight scale transform to simulate growth (using CSS transition)
+			treeImage.style.transform = `scale(${1 + currentTreeStage * 0.1})`;
+
+			// Show success popup!
+			openInfoPopup(
+				`HURRRAY! The tree grew bigger!\n You are now at stage ${currentTreeStage}!`
+			);
+		} else {
+			if (currentTreeStage == 5) {
+				openInfoPopup(
+					`Sorry, You would've unlocked another tree now, but we don't have it implemented yet :(`
+				);
+			} else {
+				showToast('New tree not implemented yet');
+			}
+		}
 		currentTreeStage++;
-		// Apply a slight scale transform to simulate growth (using CSS transition)
-		treeImage.style.transform = `scale(${1 + currentTreeStage * 0.1})`;
-
-		// Show success popup!
-		openInfoPopup(
-			`HURRRAY! The tree grew bigger! You are now at stage ${currentTreeStage}!`
-		);
-
 		// Reset for next stage
 		tasksToNextGrowth = TASKS_PER_GROWTH_STAGE;
 		dropletElements.forEach((d) => d.classList.remove('used'));
