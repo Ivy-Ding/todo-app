@@ -1162,7 +1162,7 @@ label[for="subtasks"] ul {
 
 #tree-image {
     width: 150px;
-    height: 200px;
+    height: 150px;
     background-size: contain;
     background-repeat: no-repeat;
     /* Assume a placeholder image is set in JS */
