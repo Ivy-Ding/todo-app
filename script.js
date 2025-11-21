@@ -231,7 +231,56 @@ const PRIORITIES = {
 	high: 3,
 };
 
-let taskList = [new Task('sample task')];
+let taskList = [
+	new Task('simple sample task'),
+	new Task(
+		'task with properties',
+		null,
+		'2025-11-21',
+		PRIORITIES.high,
+		'sample task notes',
+		[
+			new Subtask('sample subtask'),
+			new Subtask('you can have as many subtasks as you want!'),
+		]
+	),
+	new Task(
+		'click on "Edit" to delete tasks',
+		null,
+		'2025-12-20',
+		PRIORITIES.low,
+		'nothing other than task title is mandatory!'
+	),
+	new Task(
+		'tasks past due date still count as "due in 3 days"',
+		null,
+		'2025-10-10',
+		PRIORITIES.low,
+		'nothing other than task title is mandatory!'
+	),
+	new Task(
+		'sample deleted task',
+		null,
+		null,
+		null,
+		null,
+		null,
+		1763725876638,
+		null,
+		1763725876638
+	),
+	new Task(
+		'sample completed task',
+		null,
+		null,
+		null,
+		null,
+		null,
+		1763725876638,
+		1763725876638,
+		null
+	),
+];
 let categoriesList = [];
 
 let taskBeingEdited = null;
@@ -674,6 +723,7 @@ function renderSubtask(subtask) {
 }
 
 function clearTaskDetailsPanel() {
+	console.log('clearTaskDetailsPanel()');
 	// Clear main form
 	taskDetailForm.reset();
 
@@ -930,7 +980,6 @@ function refreshStatusPane() {
 	document.getElementById('completed-total-count').textContent =
 		completedTotal;
 }
-
 function main() {
 	applyTheme('theme-1');
 	setActivePage(PAGES.home);
