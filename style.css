@@ -14,6 +14,7 @@
     --theme-2: #43a047;
     --theme-3: #1e88e5;
     --theme-4: #cd12a8ff;
+    --page-max-width: 1500px;
 }
 
 
@@ -35,7 +36,7 @@ nav {
     display: flex;
     flex-direction: row;
     /* ALIGNMENT FIX: Set max-width and center to align with the .page container */
-    max-width: 1000px; /* Match .page max-width */
+    max-width: var(--page-max-width); /* Match .page max-width */
     border: none;
     padding-top: 20px;
     margin: 0 auto; /* Center the navigation bar */
@@ -105,7 +106,7 @@ nav button::before {
     display: grid;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
     border: 1px solid var(--primary-color);
 }
@@ -799,7 +800,7 @@ label[for="subtasks"] ul {
     display: flex;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
     flex-direction: column;
 }
@@ -874,7 +875,7 @@ label[for="subtasks"] ul {
     display: flex;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
 }
 
