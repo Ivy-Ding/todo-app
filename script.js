@@ -333,6 +333,18 @@ function refreshArchiveCompletedPane() {
                 li.appendChild(title);
             }
 
+			
+			const delBtn = document.createElement("button");
+			delBtn.textContent = "Delete";
+
+			// Clicking this button shows a "Not functional" popup
+			delBtn.addEventListener("click", () => {
+				openInfoPopup("This feature is not functional right now.");
+			});
+
+			li.appendChild(delBtn);
+
+
             completedList.appendChild(li);
         });
 }
@@ -689,6 +701,26 @@ function closeDeletePopup() {
     deletePopupOverlay.style.display = "none";
     deleteCallback = null;
 }
+
+function openInfoPopup(message) {
+    popupTitle.textContent = message;
+
+    popupInput.style.display = "none";  // hide input
+    popupSave.style.display = "none";   // hide save button
+    popupClose.textContent = "OK";
+
+    popupOverlay.style.display = "flex";
+
+    popupClose.onclick = () => {
+        popupOverlay.style.display = "none";
+
+        // reset popup layout
+        popupInput.style.display = "";
+        popupSave.style.display = "";
+        popupClose.textContent = "Close";
+    };
+}
+
 
 
 function main() {
