@@ -1126,6 +1126,10 @@ label[for="subtasks"] ul {
     text-align: center;
 }
 
+#task-rewards-pane .header {
+    margin-bottom: auto;
+}
+
 /* Hide the old static span content */
 #task-rewards-pane span {
     display: none; 
