@@ -33,6 +33,7 @@ class Task {
 }
 
 // DOM consts & handlers --------------------------------------------
+
 // PANES FOR TAB SWITCHING
 const archiveButton = document.getElementById('archive-button');
 const archivePage = document.getElementById('archive-page');
@@ -49,10 +50,10 @@ settingsButton.addEventListener('click', (e) => {
 const themesDiv = document.getElementById('themes');
 
 themesDiv.addEventListener('click', (e) => {
-    let targetDiv = e.target.closest('.theme');
-    if (targetDiv) {
-        applyTheme(targetDiv.id);
-    }
+	let targetDiv = e.target.closest('.theme');
+	if (targetDiv) {
+		applyTheme(targetDiv.id);
+	}
 });
 
 const taskButton = document.getElementById('tasks-button');
@@ -72,6 +73,9 @@ const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
 const categorySelect = document.getElementById('category');
 
+document.getElementById('filter-button').addEventListener('click', handleFilterOnClick);
+document.getElementById('sort-button').addEventListener('click', handleSortOnClick);
+
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
@@ -84,30 +88,42 @@ const popupClose = document.getElementById('popup-close');
 
 // Add these variables to your script.js
 const THEMES = {
-    'theme-1': {
-        primary: '#ff9f1a', // Orange (Default)
-        high: '#c62828',
-        medium: '#d9812e',
-        low: '#258725',
-    },
-    'theme-2': {
-        primary: '#43a047', // Green
-        high: '#c62828',
-        medium: '#fb8c00',
-        low: '#1b5e20',
-    },
-    'theme-3': {
-        primary: '#1e88e5', // Blue
-        high: '#e53935',
-        medium: '#ffb300',
-        low: '#388e3c',
-    },
-    'theme-4': {
-        primary: '#cd12a8ff', // Purple
-        high: '#c62828',
-        medium: '#ff8f00',
-        low: '#558b2f',
-    }
+	'theme-1': {
+		primary: '#ff9f1a', // Orange (Default)
+		high: '#c62828',
+		medium: '#d9812e',
+		low: '#258725',
+	},
+	'theme-2': {
+		primary: '#43a047', // Green
+		high: '#c62828',
+		medium: '#fb8c00',
+		low: '#1b5e20',
+	},
+	'theme-3': {
+		primary: '#1e88e5', // Blue
+		high: '#e53935',
+		medium: '#ffb300',
+		low: '#388e3c',
+	},
+	'theme-4': {
+		primary: '#cd12a8ff', // Purple
+		high: '#c62828',
+		medium: '#ff8f00',
+		low: '#558b2f',
+	},
+	'theme-color-blind': {
+		primary: '#000000',
+		high: '#ec0258',
+		medium: '#FB9A08',
+		low: '#025dad',
+	},
+	'theme-monochrome': {
+		primary: '#202020',
+		high: '#720000ff',
+		medium: '#662000ff',
+		low: '#023f0aff',
+	},
 };
 
 popupSave.addEventListener('click', () => {
@@ -121,8 +137,23 @@ categorySelect.addEventListener('click', function () {
 	if (this.value === 'add-new') {
 		openPopup('Add New Category', '', (newCat) => {
 			newCat = newCat.trim();
-			if (newCat !== '') {
+			if (
+				newCat !== '' &&
+				!categoriesList.includes(newCat) &&
+				newCat != 'add-new'
+			) {
 				handleAddNewCategoryOnClick(newCat);
+			} else {
+				if (newCat == 'add-new') {
+					popupInput.setCustomValidity(
+						'due to technical constraints, category name cannot be "add-new"'
+					);
+				} else {
+					popupInput.setCustomValidity(
+						'category name cannot be empty or be a duplicate of an existing category'
+					);
+					popupInput.reportValidity();
+				}
 			}
 		});
 	}
@@ -141,7 +172,12 @@ newSubtaskButton.addEventListener('click', function (e) {
 	}
 
 	const title = newSubtaskInput.value.trim();
-	if (title === '') return;
+	if (title === '') {
+		console.log('empty subtask');
+		newSubtaskInput.setCustomValidity('subtask title cannot be empty');
+		newSubtaskInput.reportValidity();
+		return;
+	}
 
 	const sub = new Subtask(title);
 	taskBeingEdited.subtasks.push(sub);
@@ -195,14 +231,16 @@ deleteTaskButton.addEventListener('click', (e) => {
 });
 
 // Priority active state styling
-document.querySelectorAll('.form-group input[type="radio"]').forEach((radio) => {
-	radio.addEventListener('change', () => {
-		document.querySelectorAll('.form-group label').forEach((label) => {
-			label.classList.remove('active');
+document
+	.querySelectorAll('.form-group input[type="radio"]')
+	.forEach((radio) => {
+		radio.addEventListener('change', () => {
+			document.querySelectorAll('.form-group label').forEach((label) => {
+				label.classList.remove('active');
+			});
+			radio.parentElement.classList.add('active');
 		});
-		radio.parentElement.classList.add('active');
 	});
-});
 
 // variables ---------------------------------------------
 const PRIORITIES = {
@@ -212,7 +250,56 @@ const PRIORITIES = {
 	high: 3,
 };
 
-let taskList = [new Task('sample task')];
+let taskList = [
+	new Task('simple sample task'),
+	new Task(
+		'task with properties',
+		null,
+		'2025-11-21',
+		PRIORITIES.high,
+		'sample task notes',
+		[
+			new Subtask('sample subtask'),
+			new Subtask('you can have as many subtasks as you want!'),
+		]
+	),
+	new Task(
+		'click on "Edit" to delete tasks',
+		null,
+		'2025-12-20',
+		PRIORITIES.low,
+		'Your deleted and completed tasks are in "Archive"!'
+	),
+	new Task(
+		'tasks past due date still count as "due in 3 days"',
+		null,
+		'2025-10-10',
+		PRIORITIES.low,
+		'nothing other than task title is mandatory!'
+	),
+	new Task(
+		'sample deleted task',
+		null,
+		null,
+		null,
+		null,
+		null,
+		1763725876638,
+		null,
+		1763725876638
+	),
+	new Task(
+		'sample completed task',
+		null,
+		null,
+		null,
+		null,
+		null,
+		1763725876638,
+		1763725876638,
+		null
+	),
+];
 let categoriesList = [];
 
 let taskBeingEdited = null;
@@ -220,6 +307,9 @@ let taskBeingEdited = null;
 let popupSaveCallback = null;
 
 let deleteCallback = null;
+
+let currentFilter = {};
+let currentSort = null;
 
 const PAGES = {
 	home: 'home',
@@ -261,6 +351,7 @@ function renderTaskToLi(task) {
 	text.textContent = task.title;
 
 	const checkbox = document.createElement('input');
+	checkbox.setAttribute('aria-label', 'task check box');
 	checkbox.setAttribute('type', 'checkbox');
 	checkbox.addEventListener('change', function () {
 		if (this.checked) {
@@ -268,7 +359,11 @@ function renderTaskToLi(task) {
 
 			this.disabled = true;
 			editButton.disabled = true;
+
+			//mimic fade
+			li.style.opacity = '0.5';
 			setTimeout(() => {
+				li.style.opacity = '0.25';
 				// Remove from active list visually
 				li.parentNode.removeChild(li);
 
@@ -281,12 +376,16 @@ function renderTaskToLi(task) {
 
 				// Move into archive completed
 				refreshArchiveCompletedPane();
-			}, 1000);
+			}, 200);
+			refreshStatusPane();
 		}
 	});
 
 	const editButton = document.createElement('button');
-	editButton.textContent = 'Edit';
+	// editButton.style.padding = '10px 20px';
+	editButton.style.height = '22px';
+	editButton.innerHTML =
+		'<img src=Logo/pencil.png width=16 height=16 margin-right=5px>      Edit';
 	editButton.addEventListener('click', () => handleEditOnClick(task));
 
 	li.appendChild(checkbox);
@@ -309,21 +408,69 @@ function renderTaskListToUL(listToRender) {
 	return ul;
 }
 
-// refresh task list pane to reflect changes (i.e. added/sorted/filtered task)
-// I envision the filter/sort to be callback functions but whatever works
-function refreshTaskListPane(filter = null, sort = null) {
-	console.debug('Refreshing task list pane...');
+function refreshTaskListPane(filter = currentFilter, sort = currentSort) {
+    console.debug('Refreshing task list pane...');
 
-	let htmlToDisplay = renderTaskListToUL(taskList.filter(isActive));
+    // 1. Start with all active (non-deleted, non-completed) tasks
+    let tasksToShow = taskList.filter(isActive);
+    const now = new Date();
 
-	// todo: add support logic for filter & sort, as the above simply shows all incomplete tasks
-	if (filter) {
-	}
+    // 2. Apply Filters
+    if (filter) {
+        // Date Filter
+        if (filter.dueWithin) {
+            let days = 0;
+            if (filter.dueWithin === '3days') days = 3;
+            else if (filter.dueWithin === '1week') days = 7;
+            else if (filter.dueWithin === '1month') days = 30;
 
-	if (sort) {
-	}
+            // Create a cutoff date (now + days)
+            const cutoff = new Date(now);
+            cutoff.setDate(now.getDate() + days);
 
-	taskListContainer.replaceChildren(htmlToDisplay);
+            tasksToShow = tasksToShow.filter((task) => {
+                if (!task.dueDate) return false;
+                // FIX: Changed 't.dueDate' to 'task.dueDate'
+                const due = new Date(task.dueDate); 
+                // Check if due date is in the future but before cutoff
+                return due >= now && due <= cutoff;
+            });
+        }
+
+        // Category Filter
+        if (filter.category) {
+            tasksToShow = tasksToShow.filter(
+                (task) => task.category === filter.category
+            );
+        }
+    }
+
+    // 3. Apply Sorting
+    if (sort) {
+        const { by, dir } = sort; // Destructure safely
+
+        if (by === 'priority') {
+            tasksToShow.sort((a, b) => a.priority - b.priority);
+        } else if (by === 'dueDate') {
+            tasksToShow.sort((a, b) => {
+                if (!a.dueDate) return 1; // No due date goes to bottom
+                if (!b.dueDate) return -1;
+                return new Date(a.dueDate) - new Date(b.dueDate);
+            });
+        }
+
+        // Reverse if descending
+        if (dir === 'desc') {
+            tasksToShow.reverse();
+        }
+    }
+
+    // 4. Render
+    // FIX: Use 'tasksToShow' instead of refiltering the raw list
+    let htmlToDisplay = renderTaskListToUL(tasksToShow);
+    taskListContainer.replaceChildren(htmlToDisplay);
+
+	updateFilterChips();
 }
 
 function refreshArchiveCompletedPane() {
@@ -348,6 +495,9 @@ function refreshArchiveCompletedPane() {
 			checkbox.addEventListener('change', function () {
 				if (!this.checked) {
 					task.dateCompleted = null; // no completed date anymore
+					showToast(
+						'Tip: unchecked tasks go back to the "Task" pane...'
+					);
 					refreshTaskListPane();
 					refreshArchiveCompletedPane();
 				}
@@ -383,7 +533,9 @@ function refreshArchiveCompletedPane() {
 
 			// Clicking this button shows a "Not functional" popup
 			delBtn.addEventListener('click', () => {
-				openInfoPopup('This feature is not functional right now.');
+				task.dateDeleted = Date.now();
+				refreshArchiveDeletedPane();
+				refreshArchiveCompletedPane();
 			});
 
 			li.appendChild(delBtn);
@@ -408,6 +560,7 @@ function refreshArchiveDeletedPane() {
 			// checkbox (just a selector, does not change state)
 			const checkbox = document.createElement('input');
 			checkbox.type = 'checkbox';
+			checkbox.checked = task.dateCompleted != null;
 
 			// title
 			const title = document.createElement('span');
@@ -418,6 +571,9 @@ function refreshArchiveDeletedPane() {
 			btn.textContent = 'Undelete';
 
 			btn.addEventListener('click', () => {
+				showToast(
+					'Tip: Your undeleted tasks go to the Tasks pane if they are not marked as complete...'
+				);
 				task.dateDeleted = null;
 
 				// checkbox state decides where the task goes
@@ -443,7 +599,195 @@ function refreshArchiveDeletedPane() {
 }
 
 // TASK LIST PAGE event handler methods ------------------------------------------------
+// Filter Button Logic
+function handleFilterOnClick() {
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const sortDropdown = document.getElementById('sort-dropdown');
+    const categorySelect = document.getElementById('category-select');
 
+    // 1. Auto-close the Sort menu if it's open
+    sortDropdown.style.display = 'none';
+
+    // 2. Toggle the Filter menu
+    if (filterDropdown.style.display === 'none' || filterDropdown.style.display === '') {
+        
+        // --- START OF NEW LOGIC ---
+        
+        // Step A: Save the current selection so it doesn't disappear while valid
+        const currentSelection = categorySelect.value;
+
+        // Step B: Clear the dropdown completely (removes hardcoded HTML options)
+        categorySelect.innerHTML = '';
+
+        // Step C: Add the default "All" option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "-- All Categories --";
+        categorySelect.appendChild(defaultOption);
+
+        // Step D: Loop through your USER-MADE list and add them
+        // This ensures the filter ONLY matches what is in your categoriesList
+        categoriesList.forEach(catName => {
+            const opt = document.createElement('option');
+            opt.value = catName;
+            opt.textContent = catName;
+            categorySelect.appendChild(opt);
+        });
+
+        // Step E: Restore selection if it still exists in the new list
+        if (currentSelection) {
+            categorySelect.value = currentSelection;
+        }
+        
+        // --- END OF NEW LOGIC ---
+
+        filterDropdown.style.display = 'flex';
+        
+        const filterSelect = document.getElementById('filter-select');
+        
+        // Logic to filter and auto-close
+        filterSelect.onchange = categorySelect.onchange = () => {
+            currentFilter = {
+                dueWithin: filterSelect.value,
+                category: categorySelect.value
+            };
+            refreshTaskListPane(currentFilter, currentSort);
+            
+            // Auto-close the menu
+            filterDropdown.style.display = 'none'; 
+        };
+
+    } else {
+        filterDropdown.style.display = 'none';
+    }
+}
+
+// Sort Button Logic
+function handleSortOnClick() {
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const sortDropdown = document.getElementById('sort-dropdown');
+
+    // 1. Auto-close the Filter menu if it's open
+    filterDropdown.style.display = 'none';
+
+    // 2. Toggle the Sort menu
+    if (sortDropdown.style.display === 'none' || sortDropdown.style.display === '') {
+        sortDropdown.style.display = 'flex';
+
+        const sortSelect = document.getElementById('sort-select');
+        
+        // UPDATE: Added logic to close menu on selection
+        sortSelect.onchange = () => {
+            const value = sortSelect.value;
+            if (!value) {
+                currentSort = null;
+            } else {
+                const [by, dir] = value.split('-');
+                currentSort = { by, dir };
+            }
+            refreshTaskListPane(currentFilter, currentSort);
+
+            // NEW: Close the menu automatically
+            sortDropdown.style.display = 'none';
+        };
+
+    } else {
+        sortDropdown.style.display = 'none';
+    }
+}
+
+// --- NEW CLEAR BUTTON LOGIC ---
+
+// Clear Filter Handler
+document.getElementById('clear-filter-btn').addEventListener('click', () => {
+    // 1. Reset Global Variable
+    currentFilter = {}; 
+
+    // 2. Reset UI Inputs
+    document.getElementById('filter-select').value = "";
+    document.getElementById('category-select').value = "";
+
+    // 3. Refresh List
+    refreshTaskListPane(currentFilter, currentSort);
+
+    // 4. Close the menu
+    document.getElementById('filter-dropdown').style.display = 'none';
+});
+
+// Clear Sort Handler
+document.getElementById('clear-sort-btn').addEventListener('click', () => {
+    // 1. Reset Global Variable
+    currentSort = null;
+
+    // 2. Reset UI Inputs
+    document.getElementById('sort-select').value = "";
+
+    // 3. Refresh List
+    refreshTaskListPane(currentFilter, currentSort);
+
+    // 4. Close the menu
+    document.getElementById('sort-dropdown').style.display = 'none';
+});
+
+function updateFilterChips() {
+    const container = document.getElementById('active-filters-bar');
+    container.innerHTML = ''; // Clear current chips
+
+    // Helper to create a chip
+    function createChip(text, clearCallback) {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        
+        const span = document.createElement('span');
+        span.textContent = text;
+        
+        const closeBtn = document.createElement('div');
+        closeBtn.className = 'chip-close';
+        closeBtn.textContent = '✕'; // Unicode multiplication sign
+        closeBtn.onclick = clearCallback;
+
+        chip.appendChild(span);
+        chip.appendChild(closeBtn);
+        container.appendChild(chip);
+    }
+
+    // 1. Check Date Filter
+    if (currentFilter.dueWithin) {
+        let label = 'Due: ';
+        if (currentFilter.dueWithin === '3days') label += '3 Days';
+        else if (currentFilter.dueWithin === '1week') label += '1 Week';
+        else if (currentFilter.dueWithin === '1month') label += '1 Month';
+
+        createChip(label, () => {
+            // Logic to remove this specific filter
+            document.getElementById('filter-select').value = ""; // Reset dropdown
+            currentFilter.dueWithin = ""; // Reset logic
+            refreshTaskListPane(currentFilter, currentSort); // Refresh
+        });
+    }
+
+    // 2. Check Category Filter
+    if (currentFilter.category) {
+        createChip(`Category: ${currentFilter.category}`, () => {
+            document.getElementById('category-select').value = "";
+            currentFilter.category = "";
+            refreshTaskListPane(currentFilter, currentSort);
+        });
+    }
+
+    // 3. Check Sort
+    if (currentSort) {
+        let label = 'Sort: ';
+        if (currentSort.by === 'priority') label += (currentSort.dir === 'asc' ? 'Priority (Low-High)' : 'Priority (High-Low)');
+        else if (currentSort.by === 'dueDate') label += (currentSort.dir === 'asc' ? 'Date (Old-New)' : 'Date (New-Old)');
+
+        createChip(label, () => {
+            document.getElementById('sort-select').value = "";
+            currentSort = null;
+            refreshTaskListPane(currentFilter, currentSort);
+        });
+    }
+}
 // create a new task and reset the input box to blank
 function handleAddTaskOnClick(e) {
 	e.preventDefault();
@@ -461,6 +805,7 @@ function handleAddTaskOnClick(e) {
 
 	// update list
 	refreshTaskListPane();
+	refreshStatusPane();
 }
 
 // push category name to categoriesList, then update the category DOM drodown
@@ -533,7 +878,9 @@ function handleEditOnClick(task) {
 	);
 	if (checkedRadio) checkedRadio.parentElement.classList.add('active');
 
-	subtaskListUI.querySelectorAll('li:not(:last-child)').forEach((li) => li.remove());
+	subtaskListUI
+		.querySelectorAll('li:not(:last-child)')
+		.forEach((li) => li.remove());
 
 	// Render existing subtasks
 	task.subtasks.forEach((st) => renderSubtask(st));
@@ -557,10 +904,13 @@ function handleEditTaskSaveOnClick(e) {
 	const selectedPriority = taskDetailForm.querySelector(
 		'input[name="priority"]:checked'
 	);
-	taskBeingEdited.priority = selectedPriority ? Number(selectedPriority.value) : 0;
+	taskBeingEdited.priority = selectedPriority
+		? Number(selectedPriority.value)
+		: 0;
 
 	// Refresh list UI
 	refreshTaskListPane();
+	refreshStatusPane();
 
 	console.debug('Task saved:', taskBeingEdited);
 
@@ -576,13 +926,11 @@ function handleEditTaskSaveOnClick(e) {
 // delete the task from task list, this is undoable in archive tab
 function handleDeleteTaskOnClick(task) {
 	task.dateDeleted = Date.now();
+	refreshStatusPane();
 }
 
 // show the filter dropdown then filter tasks and refresh task list pane
-function handleFilterOnClick() {}
 
-// show the sort dropdown then sort tasks and refresh task list pane
-function handleSortOnClick() {}
 
 // POPUP MODAL event handler methods ------------------------------------------------
 function openPopup(title, defaultValue, onSave) {
@@ -601,8 +949,10 @@ function closePopup() {
 }
 
 function savePopup() {
-	popupOverlay.style.display = 'none';
-	popupSaveCallback = null;
+	if (popupInput.checkValidity()) {
+		popupOverlay.style.display = 'none';
+		popupSaveCallback = null;
+	}
 }
 
 function renderSubtask(subtask) {
@@ -639,6 +989,7 @@ function renderSubtask(subtask) {
 }
 
 function clearTaskDetailsPanel() {
+	console.log('clearTaskDetailsPanel()');
 	// Clear main form
 	taskDetailForm.reset();
 
@@ -787,17 +1138,29 @@ function handleTaskCompletedForReward() {
 		}
 	}
 
-	// 2. Check for Tree Growth
+// 2. Check for Tree Growth
 	if (tasksToNextGrowth <= 0) {
 		// Tree Growth Animation
 		const treeImage = document.getElementById('tree-image');
+
+		if (currentTreeStage < 5) {
+			// Apply a slight scale transform to simulate growth (using CSS transition)
+			treeImage.style.transform = `scale(${1 + currentTreeStage * 0.1})`;
+
+			// Show success popup!
+			openInfoPopup(
+				`HURRRAY! The tree grew bigger!\n You are now at stage ${currentTreeStage}!`
+			);
+		} else {
+			if (currentTreeStage == 5) {
+				openInfoPopup(
+					`Sorry, You would've unlocked another tree now, but we don't have it implemented yet :(`
+				);
+			} else {
+				showToast('New tree not implemented yet');
+			}
+		}
 		currentTreeStage++;
-		// Apply a slight scale transform to simulate growth (using CSS transition)
-		treeImage.style.transform = `scale(${1 + currentTreeStage * 0.1})`;
-
-		// Show success popup!
-		openInfoPopup(`HURRRAY! You grew a tree! You are now at stage ${currentTreeStage}!`);
-
 		// Reset for next stage
 		tasksToNextGrowth = TASKS_PER_GROWTH_STAGE;
 		dropletElements.forEach((d) => d.classList.remove('used'));
@@ -806,28 +1169,116 @@ function handleTaskCompletedForReward() {
 
 // Function to apply a selected theme
 function applyTheme(themeName) {
-    const theme = THEMES[themeName];
-    if (!theme) return;
+	const theme = THEMES[themeName];
+	if (!theme) return;
 
-    // Get the :root element style sheet
-    const root = document.documentElement.style;
+	// Get the :root element style sheet
+	const root = document.documentElement.style;
 
-    // 1. FIX: Remove 'selected' class from ALL theme boxes
-    document.querySelectorAll('.theme').forEach(div => {
-        div.classList.remove('selected');
-    });
+	// 1. FIX: Remove 'selected' class from ALL theme boxes
+	document.querySelectorAll('.theme').forEach((div) => {
+		div.classList.remove('selected');
+	});
 
-    // 2. Apply main colors (unchanged)
-    root.setProperty('--primary-color', theme.primary);
-    root.setProperty('--border-color', theme.primary); // Border usually matches primary
+	// 2. Apply main colors (unchanged)
+	root.setProperty('--primary-color', theme.primary);
+	root.setProperty('--border-color', theme.primary); // Border usually matches primary
 
-    // 3. Apply priority colors (unchanged)
-    root.setProperty('--high-priority-color', theme.high);
-    root.setProperty('--medium-priority-color', theme.medium);
-    root.setProperty('--low-priority-color', theme.low);
-    
-    // 4. Apply 'selected' class to the CURRENT theme box
-    document.getElementById(themeName).classList.add('selected');
+	// 3. Apply priority colors (unchanged)
+	root.setProperty('--high-priority-color', theme.high);
+	root.setProperty('--medium-priority-color', theme.medium);
+	root.setProperty('--low-priority-color', theme.low);
+
+	// 4. Apply 'selected' class to the CURRENT theme box
+	document.getElementById(themeName).classList.add('selected');
+}
+
+function refreshStatusPane() {
+	console.debug('Refreshing status pane...');
+	console.debug(taskList);
+	const now = new Date();
+	const threeDaysLater = new Date(now).setDate(now.getDate() + 3);
+	const oneWeekLater = new Date(now).setDate(now.getDate() + 7);
+	const oneMonthLater = new Date(now).setDate(now.getDate() + 30);
+	const ongoingTasks = taskList.filter(isActive);
+	const completedTasks = taskList.filter(
+		(task) => task.dateCompleted && !task.dateDeleted
+	);
+
+	const priorityTasks = ongoingTasks.filter(
+		(task) => task.priority === PRIORITIES.high
+	).length;
+
+	const due3Days = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= threeDaysLater
+	).length;
+
+	const due1Week = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= oneWeekLater
+	).length;
+
+	const due1Month = ongoingTasks.filter(
+		(task) => task.dueDate && new Date(task.dueDate) <= oneMonthLater
+	).length;
+
+	const totalTasks = ongoingTasks.length;
+
+	const completedToday = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+
+		return completedDate.toDateString() === now.toDateString();
+	}).length;
+
+	const millisecondsInOneDay = 1000 * 60 * 60 * 24;
+	const completed1Week = completedTasks.filter((task) => {
+		const completedDate = new Date(task.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 7;
+	}).length;
+
+	const completed1Month = completedTasks.filter((t) => {
+		const completedDate = new Date(t.dateCompleted);
+		return (now - completedDate) / millisecondsInOneDay <= 30;
+	}).length;
+
+	const completedTotal = completedTasks.length;
+
+	document.getElementById('priority-task-count').textContent = priorityTasks;
+	document.getElementById('due-3days-count').textContent = due3Days;
+	document.getElementById('due-1week-count').textContent = due1Week;
+	document.getElementById('due-1month-count').textContent = due1Month;
+	document.getElementById('total-task-count').textContent = totalTasks;
+	document.getElementById('completed-today-count').textContent =
+		completedToday;
+	document.getElementById('completed-1week-count').textContent =
+		completed1Week;
+	document.getElementById('completed-1month-count').textContent =
+		completed1Month;
+	document.getElementById('completed-total-count').textContent =
+		completedTotal;
+}
+
+
+const toast = document.getElementById('toast');
+
+const notImplementedStuff = document.querySelectorAll(".not-implemented")
+
+console.error(notImplementedStuff)
+if (notImplementedStuff.length > 0) {
+	notImplementedStuff.forEach(element => 
+	{
+		element.addEventListener("click", ()=>showToast())
+	}
+	)
+}
+
+
+function showToast(message = 'Not Implemented') {
+	console.log(message);
+	toast.textContent = message;
+	toast.className = 'show';
+	setTimeout(() => {
+		toast.className = '';
+	}, 2000);
 }
 
 function main() {
@@ -836,6 +1287,7 @@ function main() {
 	refreshTaskListPane();
 	refreshArchiveCompletedPane();
 	refreshArchiveDeletedPane();
+	refreshStatusPane();
 }
 
 main();
