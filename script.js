@@ -73,6 +73,9 @@ const deleteTaskButton = document.getElementById('delete-task');
 const closeDetailsButton = document.getElementById('close-details');
 const categorySelect = document.getElementById('category');
 
+document.getElementById('filter-button').addEventListener('click', handleFilterOnClick);
+document.getElementById('sort-button').addEventListener('click', handleSortOnClick);
+
 newTaskForm.addEventListener('submit', handleAddTaskOnClick);
 taskDetailForm.addEventListener('submit', handleEditTaskSaveOnClick);
 
@@ -305,6 +308,9 @@ let popupSaveCallback = null;
 
 let deleteCallback = null;
 
+let currentFilter = {};
+let currentSort = null;
+
 const PAGES = {
 	home: 'home',
 	details: 'details',
@@ -402,21 +408,69 @@ function renderTaskListToUL(listToRender) {
 	return ul;
 }
 
-// refresh task list pane to reflect changes (i.e. added/sorted/filtered task)
-// I envision the filter/sort to be callback functions but whatever works
-function refreshTaskListPane(filter = null, sort = null) {
-	console.debug('Refreshing task list pane...');
+function refreshTaskListPane(filter = currentFilter, sort = currentSort) {
+    console.debug('Refreshing task list pane...');
 
-	let htmlToDisplay = renderTaskListToUL(taskList.filter(isActive));
+    // 1. Start with all active (non-deleted, non-completed) tasks
+    let tasksToShow = taskList.filter(isActive);
+    const now = new Date();
 
-	// todo: add support logic for filter & sort, as the above simply shows all incomplete tasks
-	if (filter) {
-	}
+    // 2. Apply Filters
+    if (filter) {
+        // Date Filter
+        if (filter.dueWithin) {
+            let days = 0;
+            if (filter.dueWithin === '3days') days = 3;
+            else if (filter.dueWithin === '1week') days = 7;
+            else if (filter.dueWithin === '1month') days = 30;
 
-	if (sort) {
-	}
+            // Create a cutoff date (now + days)
+            const cutoff = new Date(now);
+            cutoff.setDate(now.getDate() + days);
 
-	taskListContainer.replaceChildren(htmlToDisplay);
+            tasksToShow = tasksToShow.filter((task) => {
+                if (!task.dueDate) return false;
+                // FIX: Changed 't.dueDate' to 'task.dueDate'
+                const due = new Date(task.dueDate); 
+                // Check if due date is in the future but before cutoff
+                return due >= now && due <= cutoff;
+            });
+        }
+
+        // Category Filter
+        if (filter.category) {
+            tasksToShow = tasksToShow.filter(
+                (task) => task.category === filter.category
+            );
+        }
+    }
+
+    // 3. Apply Sorting
+    if (sort) {
+        const { by, dir } = sort; // Destructure safely
+
+        if (by === 'priority') {
+            tasksToShow.sort((a, b) => a.priority - b.priority);
+        } else if (by === 'dueDate') {
+            tasksToShow.sort((a, b) => {
+                if (!a.dueDate) return 1; // No due date goes to bottom
+                if (!b.dueDate) return -1;
+                return new Date(a.dueDate) - new Date(b.dueDate);
+            });
+        }
+
+        // Reverse if descending
+        if (dir === 'desc') {
+            tasksToShow.reverse();
+        }
+    }
+
+    // 4. Render
+    // FIX: Use 'tasksToShow' instead of refiltering the raw list
+    let htmlToDisplay = renderTaskListToUL(tasksToShow);
+    taskListContainer.replaceChildren(htmlToDisplay);
+
+	updateFilterChips();
 }
 
 function refreshArchiveCompletedPane() {
@@ -545,7 +599,195 @@ function refreshArchiveDeletedPane() {
 }
 
 // TASK LIST PAGE event handler methods ------------------------------------------------
+// Filter Button Logic
+function handleFilterOnClick() {
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const sortDropdown = document.getElementById('sort-dropdown');
+    const categorySelect = document.getElementById('category-select');
 
+    // 1. Auto-close the Sort menu if it's open
+    sortDropdown.style.display = 'none';
+
+    // 2. Toggle the Filter menu
+    if (filterDropdown.style.display === 'none' || filterDropdown.style.display === '') {
+        
+        // --- START OF NEW LOGIC ---
+        
+        // Step A: Save the current selection so it doesn't disappear while valid
+        const currentSelection = categorySelect.value;
+
+        // Step B: Clear the dropdown completely (removes hardcoded HTML options)
+        categorySelect.innerHTML = '';
+
+        // Step C: Add the default "All" option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "-- All Categories --";
+        categorySelect.appendChild(defaultOption);
+
+        // Step D: Loop through your USER-MADE list and add them
+        // This ensures the filter ONLY matches what is in your categoriesList
+        categoriesList.forEach(catName => {
+            const opt = document.createElement('option');
+            opt.value = catName;
+            opt.textContent = catName;
+            categorySelect.appendChild(opt);
+        });
+
+        // Step E: Restore selection if it still exists in the new list
+        if (currentSelection) {
+            categorySelect.value = currentSelection;
+        }
+        
+        // --- END OF NEW LOGIC ---
+
+        filterDropdown.style.display = 'flex';
+        
+        const filterSelect = document.getElementById('filter-select');
+        
+        // Logic to filter and auto-close
+        filterSelect.onchange = categorySelect.onchange = () => {
+            currentFilter = {
+                dueWithin: filterSelect.value,
+                category: categorySelect.value
+            };
+            refreshTaskListPane(currentFilter, currentSort);
+            
+            // Auto-close the menu
+            filterDropdown.style.display = 'none'; 
+        };
+
+    } else {
+        filterDropdown.style.display = 'none';
+    }
+}
+
+// Sort Button Logic
+function handleSortOnClick() {
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const sortDropdown = document.getElementById('sort-dropdown');
+
+    // 1. Auto-close the Filter menu if it's open
+    filterDropdown.style.display = 'none';
+
+    // 2. Toggle the Sort menu
+    if (sortDropdown.style.display === 'none' || sortDropdown.style.display === '') {
+        sortDropdown.style.display = 'flex';
+
+        const sortSelect = document.getElementById('sort-select');
+        
+        // UPDATE: Added logic to close menu on selection
+        sortSelect.onchange = () => {
+            const value = sortSelect.value;
+            if (!value) {
+                currentSort = null;
+            } else {
+                const [by, dir] = value.split('-');
+                currentSort = { by, dir };
+            }
+            refreshTaskListPane(currentFilter, currentSort);
+
+            // NEW: Close the menu automatically
+            sortDropdown.style.display = 'none';
+        };
+
+    } else {
+        sortDropdown.style.display = 'none';
+    }
+}
+
+// --- NEW CLEAR BUTTON LOGIC ---
+
+// Clear Filter Handler
+document.getElementById('clear-filter-btn').addEventListener('click', () => {
+    // 1. Reset Global Variable
+    currentFilter = {}; 
+
+    // 2. Reset UI Inputs
+    document.getElementById('filter-select').value = "";
+    document.getElementById('category-select').value = "";
+
+    // 3. Refresh List
+    refreshTaskListPane(currentFilter, currentSort);
+
+    // 4. Close the menu
+    document.getElementById('filter-dropdown').style.display = 'none';
+});
+
+// Clear Sort Handler
+document.getElementById('clear-sort-btn').addEventListener('click', () => {
+    // 1. Reset Global Variable
+    currentSort = null;
+
+    // 2. Reset UI Inputs
+    document.getElementById('sort-select').value = "";
+
+    // 3. Refresh List
+    refreshTaskListPane(currentFilter, currentSort);
+
+    // 4. Close the menu
+    document.getElementById('sort-dropdown').style.display = 'none';
+});
+
+function updateFilterChips() {
+    const container = document.getElementById('active-filters-bar');
+    container.innerHTML = ''; // Clear current chips
+
+    // Helper to create a chip
+    function createChip(text, clearCallback) {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        
+        const span = document.createElement('span');
+        span.textContent = text;
+        
+        const closeBtn = document.createElement('div');
+        closeBtn.className = 'chip-close';
+        closeBtn.textContent = '✕'; // Unicode multiplication sign
+        closeBtn.onclick = clearCallback;
+
+        chip.appendChild(span);
+        chip.appendChild(closeBtn);
+        container.appendChild(chip);
+    }
+
+    // 1. Check Date Filter
+    if (currentFilter.dueWithin) {
+        let label = 'Due: ';
+        if (currentFilter.dueWithin === '3days') label += '3 Days';
+        else if (currentFilter.dueWithin === '1week') label += '1 Week';
+        else if (currentFilter.dueWithin === '1month') label += '1 Month';
+
+        createChip(label, () => {
+            // Logic to remove this specific filter
+            document.getElementById('filter-select').value = ""; // Reset dropdown
+            currentFilter.dueWithin = ""; // Reset logic
+            refreshTaskListPane(currentFilter, currentSort); // Refresh
+        });
+    }
+
+    // 2. Check Category Filter
+    if (currentFilter.category) {
+        createChip(`Category: ${currentFilter.category}`, () => {
+            document.getElementById('category-select').value = "";
+            currentFilter.category = "";
+            refreshTaskListPane(currentFilter, currentSort);
+        });
+    }
+
+    // 3. Check Sort
+    if (currentSort) {
+        let label = 'Sort: ';
+        if (currentSort.by === 'priority') label += (currentSort.dir === 'asc' ? 'Priority (Low-High)' : 'Priority (High-Low)');
+        else if (currentSort.by === 'dueDate') label += (currentSort.dir === 'asc' ? 'Date (Old-New)' : 'Date (New-Old)');
+
+        createChip(label, () => {
+            document.getElementById('sort-select').value = "";
+            currentSort = null;
+            refreshTaskListPane(currentFilter, currentSort);
+        });
+    }
+}
 // create a new task and reset the input box to blank
 function handleAddTaskOnClick(e) {
 	e.preventDefault();
@@ -688,10 +930,7 @@ function handleDeleteTaskOnClick(task) {
 }
 
 // show the filter dropdown then filter tasks and refresh task list pane
-function handleFilterOnClick() {}
 
-// show the sort dropdown then sort tasks and refresh task list pane
-function handleSortOnClick() {}
 
 // POPUP MODAL event handler methods ------------------------------------------------
 function openPopup(title, defaultValue, onSave) {
@@ -899,7 +1138,7 @@ function handleTaskCompletedForReward() {
 		}
 	}
 
-	// 2. Check for Tree Growth
+// 2. Check for Tree Growth
 	if (tasksToNextGrowth <= 0) {
 		// Tree Growth Animation
 		const treeImage = document.getElementById('tree-image');

@@ -132,12 +132,13 @@ nav button::before {
 }
 /* Vertical divider between the two columns */
 #tasks-list-pane {
+    flex: 0 0 32%;
     border-radius: 0 0 0 5px;
     border-right: 1px solid var(--primary-color);
 }
 
 #task-details-pane {
-    flex: 0 0 66%;
+    flex: 0 0 68%;
     border-radius: 0 0 5px 0;
     display: flex;
     flex-direction: column;
@@ -1249,4 +1250,134 @@ label[for="subtasks"] ul {
 #popup-save{
     background-color: var(--primary-color);
     color: white;
+}
+
+.header .right select {
+    padding: 6px 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* Wrapper to hold the button and the floating menu together */
+.btn-group {
+    position: relative; /* Establishes a positioning context for the dropdown */
+}
+
+/* The floating container for the select boxes */
+.dropdown-container {
+    position: absolute;
+    top: 100%;      /* Push it exactly below the button */
+    z-index: 1000;  /* Ensure it floats on top of task lists */
+    
+    /* Make the two filter selects stack vertically */
+    display: flex;  
+    flex-direction: column;
+    gap: 5px;       /* Small space between the two filter boxes */
+    
+    /* Prevent it from being 0 width */
+    min-width: 200px; 
+}
+
+/* Make the select boxes look nice inside the dropdown */
+.dropdown-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--primary-color);
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Ensure the dropdowns are hidden by default but use Flex when shown */
+.dropdown-container {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Remove the inline style="display:none" from HTML selects 
+   because now the parent container handles visibility */
+.dropdown-container select {
+    display: block; /* Make sure they are visible inside the container */
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* Style for the Red Clear Button */
+.clear-btn {
+    background-color: #ffebee !important; /* Light red background */
+    color: #c62828 !important; /* Dark red text */
+    border: 1px solid #c62828 !important;
+    font-size: 12px !important;
+    padding: 5px !important;
+    margin-top: 5px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clear-btn:hover {
+    background-color: #c62828 !important;
+    color: white !important;
+}
+
+/* Container for the chips */
+#active-filters-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between bubbles and the list */
+    min-height: 0; /* Prevents layout shift when empty */
+}
+
+/* The Bubble (Chip) Styling */
+.filter-chip {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: popIn 0.2s ease-out;
+}
+
+/* The 'X' button inside the bubble */
+.chip-close {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.chip-close:hover {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--primary-text-color);
 }
