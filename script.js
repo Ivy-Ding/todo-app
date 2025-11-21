@@ -33,6 +33,7 @@ class Task {
 }
 
 // DOM consts & handlers --------------------------------------------
+
 // PANES FOR TAB SWITCHING
 const archiveButton = document.getElementById('archive-button');
 const archivePage = document.getElementById('archive-page');
@@ -49,10 +50,10 @@ settingsButton.addEventListener('click', (e) => {
 const themesDiv = document.getElementById('themes');
 
 themesDiv.addEventListener('click', (e) => {
-    let targetDiv = e.target.closest('.theme');
-    if (targetDiv) {
-        applyTheme(targetDiv.id);
-    }
+	let targetDiv = e.target.closest('.theme');
+	if (targetDiv) {
+		applyTheme(targetDiv.id);
+	}
 });
 
 const taskButton = document.getElementById('tasks-button');
@@ -980,6 +981,31 @@ function refreshStatusPane() {
 	document.getElementById('completed-total-count').textContent =
 		completedTotal;
 }
+
+
+const toast = document.getElementById('toast');
+
+const notImplementedStuff = document.querySelectorAll(".not-implemented")
+
+console.error(notImplementedStuff)
+if (notImplementedStuff.length > 0) {
+	notImplementedStuff.forEach(element => 
+	{
+		element.addEventListener("click", ()=>showToast())
+	}
+	)
+}
+
+
+function showToast(message = 'Not Implemented') {
+	console.log(message);
+	toast.textContent = message;
+	toast.className = 'show';
+	setTimeout(() => {
+		toast.className = '';
+	}, 2000);
+}
+
 function main() {
 	applyTheme('theme-1');
 	setActivePage(PAGES.home);

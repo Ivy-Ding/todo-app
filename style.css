@@ -1202,3 +1202,31 @@ label[for="subtasks"] ul {
 .droplet.used {
     opacity: 0.2;
 }
+
+#toast {
+    visibility: hidden;
+    min-width: 200px;
+    color: var(--secondary-background);
+    background-color: var(--primary-text-color);
+    text-align: center;
+    top: 50vh;
+    margin-left: -100px;
+    left: 50%;
+    position: fixed;
+    padding: 10px 50px;
+}
+
+#toast.show {
+    visibility: visible;
+    animation: fadein 1s fadeout 1s 2.5s;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
