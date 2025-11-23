@@ -19,6 +19,13 @@
 -->
 
 	<body>
+				<div class="top" aria-label="title bar">
+			<h1>Todo App</h1>
+			<div id="topbar-right">
+				<button class="not-implemented" ><img src="Logo/globe.png" width="20"> Language</button>
+				<button class="not-implemented"><img src="Logo/bell.png" width="20"> Notification</button>
+			</div>
+		</div>
 		<nav>
 			<button id="tasks-button" class="active">Tasks</button>
 			<button id="archive-button">Archive</button>
@@ -30,11 +37,53 @@
 				<div class="header">
 					<h2>Tasks</h2>
 					<div class="right">
-						<button aria-label="filter">Filter</button>
-						<button aria-label="sort">Sort</button>
+    
+					<div class="btn-group">
+						<button id="filter-button" aria-label="filter">Filter</button>
+						
+						<div id="filter-dropdown" class="dropdown-container" style="display: none;">
+							<select id="filter-select">
+								<option value="">-- No Due Date Filter --</option>
+								<option value="3days">Due within 3 days</option>
+								<option value="1week">Due within 1 week</option>
+								<option value="1month">Due within 1 month</option>
+							</select>
+
+							<select id="category-select">
+								<option value="">-- All Categories --</option>
+								<option value="Work">Assignments</option>
+								<option value="Personal">Projects</option>
+								<option value="Errands">Tests and Exams</option>
+							</select>
+
+							<button id="clear-filter-btn" class="clear-btn">✖ Clear Filter</button>
+						</div>
 					</div>
+					
+					<div class="btn-group">
+						<button id="sort-button" aria-label="sort">Sort</button>
+						
+						<div id="sort-dropdown" class="dropdown-container" style="display: none;">
+							<select id="sort-select">
+								<option value="">-- No Sort --</option>
+								<optgroup label="Priority">
+									<option value="priority-asc">Low to High</option>
+									<option value="priority-desc">High to Low</option>
+								</optgroup>
+								<optgroup label="Due Date">
+									<option value="dueDate-asc">Most recent last</option>
+									<option value="dueDate-desc">Most recent first</option>
+								</optgroup>
+							</select>
+
+							<button id="clear-sort-btn" class="clear-btn">✖ Clear Sort</button>
+						</div>
+					</div>
+
+				</div>
 				</div>
 				<div class="body">
+					<div id="active-filters-bar"></div>
 					<div id="task-list-container"></div>
 					<form id="new-task-form">
 						<input
@@ -128,6 +177,8 @@
 									type="text"
 									id="new-subtask-input"
 									name="subtask-title"
+									placeholder="Add a subtask..."
+									oninput="this.setCustomValidity('')"
 								/>
 								<button id="new-subtask-button">Add</button>
 							</li>
@@ -137,7 +188,7 @@
 							<button id="delete-task">Delete</button>
 						
 							<div>
-								<button id="close-details">Close</button>
+								<button id="close-details" formnovalidate>Close</button>
 								<button id="save-task">Save</button>
 							</div>
 						</div>	
@@ -147,7 +198,7 @@
 			<div id = "home-side-pane">
 				<section id="task-rewards-pane" class="pane">
 					<div class="header">
-						<h2>Rewards</h2>
+						<h2>Complete Tasks to Water & Grow the Tree</h2>
 					</div>
 					<div id="rewards-container">
 						<div id="tree-image" style="background-image: url(Logo/tree.png);"></div>
@@ -207,7 +258,7 @@
 				<div class="header">
 					<h2>Completed</h2>
 					<div class="right">
-						<button aria-label="filter">Filter</button>
+						<button aria-label="filter" class="not-implemented">Filter</button>
 					</div>
 				</div>
 				<div class="body archive-body">
@@ -226,27 +277,27 @@
 		<div id ="settings-page" class="page">
 			<fieldset id="setting-left-pane" class="pane-fixed-dock-20">
 				<label>
-					<input type="radio" name="settings-tab" value="account" disabled/>
+					<input type="radio" name="settings-tab" value="account" class="not-implemented"/>
 					Account
 				</label><br>
 
 				<label>
-					<input type="radio" name="settings-tab" value="learn" disabled/>
+					<input type="radio" name="settings-tab" value="learn" class="not-implemented"/>
 					Learn
 				</label><br>
 
-				<label>
+				<label id="settings-appearance">
 					<input type="radio" name="settings-tab" value="appearance" checked/>
 					Appearance
 				</label><br>
 
 				<label>
-					<input type="radio"	name="settings-tab" value="about" disabled/>
+					<input type="radio"	name="settings-tab" value="about" class="not-implemented"/>
 					About
 				</label><br>
 
 				<label>
-					<input type="radio" name="settings-tab" value="help" disabled/>
+					<input type="radio" name="settings-tab" value="help" class="not-implemented"/>
 					Help
 				</label><br>
 			</fieldset>
@@ -254,7 +305,7 @@
 			<section class="pane">
 				<label class="switch">
 					Match System Appearance
-					<input type = "checkbox">
+					<input type = "checkbox" class="not-implemented">
 				</label>
 				<div id="themes">
 					<div id="theme-1" class="theme">
@@ -269,6 +320,12 @@
 					<div id="theme-4" class="theme">
 						Purple
 					</div>
+					<div id="theme-color-blind" class="theme">
+						Color Accessible
+					</div>
+					<div id="theme-monochrome" class="theme">
+						High Contrast
+					</div>
 				</div>
 			</section>
 		</div>
@@ -277,7 +334,12 @@
 			<div class="popup-box">
 				<h3 id="popup-title">Popup</h3>
 
-				<input id="popup-input" type="text" placeholder="Enter name..." />
+				
+				<input id="popup-input" 
+					aria-label="enter category name" 
+					type="text" 
+					placeholder="Enter name..." 
+					oninput="this.setCustomValidity('')"/>
 
 				<div class="popup-buttons">
 					<button id="popup-close">Close</button>
@@ -297,6 +359,6 @@
 				</div>
 			</div>
 		</div>
-
+		<div id ="toast">Placeholder toast message</div>
 	</body>
 </html>

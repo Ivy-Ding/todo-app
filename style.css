@@ -14,6 +14,11 @@
     --theme-2: #43a047;
     --theme-3: #1e88e5;
     --theme-4: #cd12a8ff;
+    --theme-color-blind: #000000;
+    --theme-monochrome: #202020;
+    --page-max-width: 1500px;
+    --form-field-separator: 20px;
+    --page-height: 80vh;
 }
 
 
@@ -35,12 +40,18 @@ nav {
     display: flex;
     flex-direction: row;
     /* ALIGNMENT FIX: Set max-width and center to align with the .page container */
-    max-width: 1000px; /* Match .page max-width */
+    max-width: var(--page-max-width); /* Match .page max-width */
     border: none;
     padding-top: 20px;
     margin: 0 auto; /* Center the navigation bar */
     /* Ensure the buttons start from the left of the centered nav container */
     justify-content: flex-start;
+}
+
+/* task edit button hover */
+#task-list-container button:hover {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 nav button {
@@ -98,14 +109,14 @@ nav button::before {
 
 /* --- MAIN PAGE LAYOUT (Tasks Page) --- */
 .page {
-    height: 85vh; /* total container height */
+    height: var(--page-height); /* total container height */
     /* *** MODIFIED FOR 2 COLUMNS *** */
     /* Layout: TaskList (240px) | TaskDetails (1fr) */
     grid-template-columns: 1fr 2fr; 
     display: grid;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
     border: 1px solid var(--primary-color);
 }
@@ -121,12 +132,13 @@ nav button::before {
 }
 /* Vertical divider between the two columns */
 #tasks-list-pane {
+    flex: 0 0 32%;
     border-radius: 0 0 0 5px;
     border-right: 1px solid var(--primary-color);
 }
 
 #task-details-pane {
-    flex: 0 0 66%;
+    flex: 0 0 68%;
     border-radius: 0 0 5px 0;
     display: flex;
     flex-direction: column;
@@ -307,7 +319,6 @@ nav button::before {
 #task-list-container {
     flex-grow: 1;
     overflow-y: auto;
-    max-height: 600px;
     border: none;
     box-sizing: border-box;
     padding: 0 0 10px 0;
@@ -316,7 +327,7 @@ nav button::before {
 #new-task-form {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: auto;
     flex-shrink: 0;
     width: 100%;
     max-width: none;
@@ -376,7 +387,7 @@ nav button::before {
     gap: 10px;
     overflow-y: auto; 
     /* Add bottom padding to create clearance for the fixed button-row (~74px height). */
-    padding: 10px 15px 15px 15px; 
+    padding: 10px 50px;
 }
 
 #task-details-form input#title {
@@ -498,19 +509,16 @@ label[for="priority"]::before {
     border: none;
 }
 
-.form-group label {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    margin-right: 0px; 
-}
-
 .form-group input[type="radio"] {
     display: none; 
 }
 
 /* Style label as radio button */
 .form-group label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-right: 0px; 
     border: 2px solid #666;
     border-radius: 5px; 
     padding: 8px 18px; 
@@ -518,6 +526,7 @@ label[for="priority"]::before {
     margin-right: 10px;
     background: #fff;
     transition: all 0.2s;
+    cursor: pointer;
 }
 
 /* Set initial button colors */
@@ -595,10 +604,11 @@ label[for="notes"] {
     /* FIX: Remove flex-grow so Notes only takes its content height. */
     flex-grow: 0; 
     padding-bottom: 0;
+    margin-top:var(--form-field-separator);
 }
 
 label[for="notes"] textarea {
-    width: 66vh; 
+    width: 100%;
     height: 10vh; 
     font-size: 14px;
     border-radius: 5px;
@@ -614,6 +624,8 @@ label[for="subtasks"] {
     font-size: 20px;
     font-weight: bold;
     display: block;
+    margin-top:var(--form-field-separator);
+    width: 100%
 }
 
 label[for="subtasks"] ul {
@@ -631,6 +643,7 @@ label[for="subtasks"] ul {
     align-items: center;
     padding: 0;
     margin-bottom: 0;
+    width: 100%;
 }
 
 #subtask-list li:last-child input[type="text"] {
@@ -641,13 +654,14 @@ label[for="subtasks"] ul {
     border: 2px solid var(--border-color); 
     min-width: 0;
     box-sizing: border-box;
+    width: 100%;
 }
 
 #subtask-list li:last-child button {
     flex-shrink: 0;
     padding: 8px 18px;
     font-size: 15px;
-    margin-right: 20vh;
+    margin-right: 0;
     font-weight: bold;
     border-radius: 5px;
     background-color: #fff;
@@ -691,7 +705,7 @@ label[for="subtasks"] ul {
     justify-content: space-between;
     border-top: 1px solid var(--border-color); 
     padding-top: 15px;
-    margin-top: 10px;
+    margin-top: auto;
 }
 
 .button-row button {
@@ -795,11 +809,11 @@ label[for="subtasks"] ul {
 
 /* --- ARCHIVE PAGE --- */
 #archive-page {
-    height: 85vh;
+    height: var(--page-height);
     display: flex;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
     flex-direction: column;
 }
@@ -819,22 +833,6 @@ label[for="subtasks"] ul {
     padding: 5px 0;
     display: flex;
     justify-content: flex-start;
-}
-
-#archive-page summary button {
-    font-size: 14px;
-    border-radius: 5px;
-    background-color: #fff; 
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-    cursor: pointer;
-    margin-left: auto;
-    display: inline-flex;
-}
-
-#archive-page summary button:hover {
-    background-color: var(--primary-color);
-    color: white;
 }
 
 #archive-page li {
@@ -870,11 +868,11 @@ label[for="subtasks"] ul {
 
 /* --- SETTINGS PAGE --- */
 #settings-page {
-    height: 85vh;
+    height: var(--page-height);
     display: flex;
     width: vh;
     margin: auto;
-    max-width: 1000px;
+    max-width: var(--page-max-width);
     background-color: var(--secondary-background);
 }
 
@@ -895,9 +893,15 @@ label[for="subtasks"] ul {
     cursor: pointer;
 }
 
-#setting-left-pane label:hover {
+#setting-left-pane label:hover,
+#settings-appearance{
     background-color: var(--primary-color);
     color: white; 
+}
+
+#settings-appearance{
+    border-color: var(--primary-text-color) ;
+    border-style: solid;
 }
 
 #setting-left-pane label:not(:last-child) {
@@ -1026,6 +1030,23 @@ label[for="subtasks"] ul {
     color: white;
 }
 
+#theme-color-blind {
+    border: 2px solid var(--theme-color-blind);
+}
+
+#theme-color-blind:hover {
+    background-color: var(--theme-color-blind);
+    color: white;
+}
+
+#theme-monochrome {
+    border: 2px solid var(--theme-monochrome);
+}
+
+#theme-monochrome:hover {
+    background-color: var(--theme-monochrome);
+    color: white;
+}
 
 .popup-overlay {
     position: fixed;
@@ -1121,6 +1142,10 @@ label[for="subtasks"] ul {
     text-align: center;
 }
 
+#task-rewards-pane .header {
+    margin-bottom: auto;
+}
+
 /* Hide the old static span content */
 #task-rewards-pane span {
     display: none; 
@@ -1137,7 +1162,7 @@ label[for="subtasks"] ul {
 
 #tree-image {
     width: 150px;
-    height: 200px;
+    height: 150px;
     background-size: contain;
     background-repeat: no-repeat;
     /* Assume a placeholder image is set in JS */
@@ -1162,4 +1187,208 @@ label[for="subtasks"] ul {
 /* CSS class to show a droplet has been used */
 .droplet.used {
     opacity: 0.2;
+}
+
+#toast {
+    visibility: hidden;
+    min-width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 16px;
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+#toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+.top {
+    display: flex;
+    align-items: center;
+}
+.top h1{
+    margin-right: auto;
+}
+.top button{
+    background: none;
+    border-color: var(--primary-color);
+    text-align: center;
+    align-items: center;
+}
+
+#popup-save{
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.header .right select {
+    padding: 6px 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* Wrapper to hold the button and the floating menu together */
+.btn-group {
+    position: relative; /* Establishes a positioning context for the dropdown */
+}
+
+/* The floating container for the select boxes */
+.dropdown-container {
+    position: absolute;
+    top: 100%;      /* Push it exactly below the button */
+    z-index: 1000;  /* Ensure it floats on top of task lists */
+    
+    /* Make the two filter selects stack vertically */
+    display: flex;  
+    flex-direction: column;
+    gap: 5px;       /* Small space between the two filter boxes */
+    
+    /* Prevent it from being 0 width */
+    min-width: 200px; 
+}
+
+/* Make the select boxes look nice inside the dropdown */
+.dropdown-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--primary-color);
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Ensure the dropdowns are hidden by default but use Flex when shown */
+.dropdown-container {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Remove the inline style="display:none" from HTML selects 
+   because now the parent container handles visibility */
+.dropdown-container select {
+    display: block; /* Make sure they are visible inside the container */
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* Style for the Red Clear Button */
+.clear-btn {
+    background-color: #ffebee !important; /* Light red background */
+    color: #c62828 !important; /* Dark red text */
+    border: 1px solid #c62828 !important;
+    font-size: 12px !important;
+    padding: 5px !important;
+    margin-top: 5px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clear-btn:hover {
+    background-color: #c62828 !important;
+    color: white !important;
+}
+
+/* Container for the chips */
+#active-filters-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between bubbles and the list */
+    min-height: 0; /* Prevents layout shift when empty */
+}
+
+/* The Bubble (Chip) Styling */
+.filter-chip {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: popIn 0.2s ease-out;
+}
+
+/* The 'X' button inside the bubble */
+.chip-close {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.chip-close:hover {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--primary-text-color);
+}
+
+
+
+.top {
+    max-width: var(--page-max-width);
+    margin: auto;
+}
+
+.top h1 {
+    margin-bottom: 5px;
+}
+
+#topbar-right button {
+    background: none;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#topbar-right button:hover {
+    background-color: var(--primary-color);
+    color: white;
 }
